@@ -1,7 +1,7 @@
 package main //Siempre hay que traer el paquete main, tambien define el punto de entrada
 import (
 	"fmt"
-	"strings"
+	// "strings"
 )
 
 // Este es el punto de entrada de la aplicación
@@ -12,6 +12,7 @@ import (
 // complex64, complex128 | valores que tienen una parte real y otra imaginaria
 
 func main() {
+	/* Basics
 	fmt.Println("Hola go")
 
 	//Numeros
@@ -43,4 +44,16 @@ func main() {
 		Edad   int
 	}
 
+	persona1 := Persona{Nombre: "Bryan", Edad: 27}
+	persona2 := Persona{Nombre: "Ivan"} // La edad toma el valor de 0
+
+	// Imprimir resultados
+	fmt.Println("Suma", suma)
+	fmt.Println("Mensaje", toMayus)
+	fmt.Println("Array Fijo", arrayFijo)
+	fmt.Println("Slice Variable", sliceVariable)
+	fmt.Println("Diccionario", diccionario)
+	fmt.Println("Persona", persona1)
+	fmt.Println("Persona 2", persona2)
+	*/
 }
