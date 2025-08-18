@@ -56,4 +56,46 @@ func main() {
 	fmt.Println("Persona", persona1)
 	fmt.Println("Persona 2", persona2)
 	*/
+
+	/* Condicionales, bucles */
+
+	//Condicionales
+	edad := 20
+
+	if edad >= 18 {
+		fmt.Println("Es mayor de edad")
+	} else {
+		fmt.Println("Es menor de edad")
+	}
+
+	//Bucles
+	for i := 0; i < 3; i++ {
+		fmt.Printf("Iteracion: %d\n", i) //El %d sirve para asignar un valor dentro de un string, valor se coloca despues de la coma
+	}
+
+	// Range uso del rango del slice
+	slice := []string{"Algo", "Hola", "Otro"}
+	for index, value := range slice {
+		fmt.Printf("Index: %d, Value: %s\n", index, value) // %s para colocar valores de tipo string
+	}
+
+	for index, _ := range slice { // Si no se va a usar el valor, se puede colocar un guion bajo para ignorarlo
+		fmt.Printf("Index con _: %d\n", index)
+	}
+
+	for index := range slice { // Simplificado (sin "_")
+		fmt.Printf("Solo Index: %d\n", index)
+	}
+
+	for _, value := range slice { // No se pude simplificar
+		fmt.Printf("Segundo Valor: %s\n", value)
+	}
+
+	// Defer Permite ejecutar codigo siempre al final de la compilacion del metodo principal/asociado
+	defer fmt.Println("Uso del defer")
+
+	fmt.Println("Prueba para el defer")
+	fmt.Println("Prueba para el defer")
+	fmt.Println("Prueba para el defer")
+
 }
