@@ -57,7 +57,7 @@ func main() {
 	fmt.Println("Persona 2", persona2)
 	*/
 
-	/* Condicionales, bucles */
+	/* Condicionales, bucles
 
 	//Condicionales
 	edad := 20
@@ -98,4 +98,14 @@ func main() {
 	fmt.Println("Prueba para el defer")
 	fmt.Println("Prueba para el defer")
 
+	*/
+
+	/* Funciones */
+
+}
+
+func suma(a int, b int) {
+	result := a + b
+	fmt.Println("Alog")
+	return result
 }
