@@ -1,4 +1,5 @@
 package main //Siempre hay que traer el paquete main, tambien define el punto de entrada
+import "first-go/domain"
 
 /* Package a importar*/
 // errors
@@ -123,8 +124,6 @@ func imprimirSaludo(canal <-chan string) { // Asi se recibe un dato desde la GoR
 }
 
 */
-
-/* Packages */
 
 func main() {
 	/* Basics
@@ -315,5 +314,8 @@ func main() {
 	// En consola se ve como se repiten los datos, eso es porque estan bloqueados
 
 	*/
+
+	/* uso de packages*/
+	domain.App()
 
 }
