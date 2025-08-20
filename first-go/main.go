@@ -11,6 +11,8 @@ package main //Siempre hay que traer el paquete main, tambien define el punto de
 // rune === int32 | para representar un solo caracter que ocupa mas de un byte
 // complex64, complex128 | valores que tienen una parte real y otra imaginaria
 // nil === null
+// * === Puntero
+// & === Direccion de memoria
 
 /* Funciones
 
@@ -64,6 +66,18 @@ func (rec rectangulo) area() float64 { // El primer parentesisi representa que e
 	return rec.alto * rec.ancho
 }
 
+*/
+
+/* Punteros
+// Para modificar el elemento original (No recomendable, mala practica)
+// Nunca se debe cambiar el argumento directamente (Hacer copia)
+
+// Las direcciones de memoria no funcionan igual en go, sino que se hace una copia del argumento
+func incrementarValor(value *int) { // Para poder acceder al argumento en memoria hay que utilizar *
+	*value++ // Tambien hay que colocar el * para que funcione
+}
+
+// new() permite crear un puntero con un valor predeterminado del tipo correspondiente
 */
 
 func main() {
@@ -184,4 +198,17 @@ func main() {
 
 	*/
 
+	/* Uso de punteros
+	valor := 10
+	fmt.Println("Puntero antes del cambio:", valor)
+
+	incrementarValor(&valor) // Se tiene que poner la & para hacer referencia a la direccion de memoria
+	fmt.Println("Puntero despues del valor:", valor)
+
+	puntero := new(int)                                 // Crea un puntero hacia un espacio de memoria
+	fmt.Println("Espacio de memoria con new:", puntero) // Imprime la direccion de memoria
+	fmt.Println("Valor de memoria con new:", *puntero)  // Imprime el valor que hay en la direccion de memoria
+	*puntero = 20
+	fmt.Println("Valor de memoria con new, cambiado:", *puntero)
+	*/
 }
