@@ -1,7 +1,4 @@
 package main //Siempre hay que traer el paquete main, tambien define el punto de entrada
-import (
-	"fmt"
-)
 
 /* Package a importar*/
 // errors
@@ -158,7 +155,7 @@ func main() {
 
 	*/
 
-	/* Declaracion y utilizacion de funciones */
+	/* Declaracion y utilizacion de funciones
 
 	cociente, resto := division(20, 2) // Cada variable obtiene el valor que retorna la funcion respectivamente
 
@@ -184,5 +181,7 @@ func main() {
 
 	rectan := rectangulo{alto: 10, ancho: 5} // Definir primero los valores en el type/interface
 	fmt.Println(rectan.area())               // La variable tiene acceso a las funciones del type/interface
+
+	*/
 
 }
