@@ -23,11 +23,11 @@ func deletePerson(name string) {
 		if name == userName.Nombre {
 			personDB = append(personDB[:index], personDB[index+1:]...) // Los ... sirven para sacar los valores de esa parte del array.
 			fmt.Println("Los datos se han borrado exitosamente...\n", personDB)
-		} else {
-			fmt.Println("No se ha encontrado ningun dato...")
+			return
 		}
 	}
 
+	fmt.Println("No se ha encontrado ningun dato...")
 }
 
 func deleteProduct(name string) {
@@ -35,16 +35,16 @@ func deleteProduct(name string) {
 		if name == nameProdu.Nombre {
 			productoDB = append(productoDB[:index], productoDB[index+1:]...)
 			fmt.Println("Se ha borrado el producto correctamente\n", productoDB)
-		} else {
-			fmt.Println("No se ha encontrado ningun dato")
+			return
 		}
 	}
+	fmt.Println("No se ha encontrado ningun dato")
 }
 
 func updatePersonAddress(newAddress string, personName string) {
 	for index, userName := range personDB {
 		if personName == userName.Nombre {
-			//userName.ChangeDireccion(newAddress)
+			//userName.ChangeDireccion(newAddress) Funciona correctamente pero solo modifica la copia del dato, no el dato original
 			personDB[index].ChangeDireccion(newAddress)
 		} else {
 			fmt.Println("No se ha encontrado ningun dato...")
@@ -56,7 +56,6 @@ func updatePersonAddress(newAddress string, personName string) {
 func updateProductStock(newStock int, produtName string) {
 	for index, product := range productoDB {
 		if produtName == product.Nombre {
-			//product.UpdateStock(newStock)
 			productoDB[index].UpdateStock(newStock)
 		} else {
 			fmt.Println("No se ha encontrado el producto")
