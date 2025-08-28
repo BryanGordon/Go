@@ -23,13 +23,30 @@ var instruction string = ""
 var taskInfo string
 
 func createFile(info TaskData) {
-	newJson, err := json.MarshalIndent(info, "", " ")
+	var tasks []TaskData
+	isFileExist := false
+
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+		isFileExist = true
+
+		if err == nil && len(data) > 0 {
+			_ = json.Unmarshal(data, &tasks)
+		}
+
+	}
+
+	tasks = append(tasks, info)
+	newJson, err := json.MarshalIndent(tasks, "", " ")
 
 	if err != nil {
 		panic(err)
 	}
 
 	err = os.WriteFile(fileName, newJson, 0644)
+
 	if err != nil {
 		panic(err)
 	}
