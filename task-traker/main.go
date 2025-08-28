@@ -61,20 +61,22 @@ func createFile(info TaskData) {
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
+	idGlobal := 1
 
 	for {
 		fmt.Println("Ingrese un comando")
-		idGlobal := 1
 
 		instruction, _ = reader.ReadString('\n')
 		instruction = strings.TrimSpace(instruction)
 
 		if instruction == "add" {
-			// fmt.Println("Ingrese el nombre de la tarea")
+			fmt.Println("Ingrese el nombre de la tarea")
 			taskInfo, _ = reader.ReadString('\n')
 			taskInfo = strings.TrimRight(taskInfo, "\r\n")
-			newTask := TaskData{Id: idGlobal, Description: taskInfo, Status: "To Do", CreatedAt: 12, UpdatedAt: 12}
+
+			newTask := TaskData{Id: idGlobal, Description: taskInfo, Status: "todo", CreatedAt: 12, UpdatedAt: 12}
 			createFile(newTask)
+
 			idGlobal++
 		}
 
