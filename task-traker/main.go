@@ -51,10 +51,11 @@ func createFile(info TaskData) {
 		panic(err)
 	}
 
-	fmt.Println("Archivo creado exitosamente...")
-}
-
-func writeFIle() {
+	if isFileExist {
+		fmt.Println("Se ha agregado una nueva tarea...")
+	} else {
+		fmt.Println("Archivo creado exitosamente...")
+	}
 
 }
 
