@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -120,6 +121,39 @@ func main() {
 			createFile(newTask)
 
 			idGlobal++
+		}
+
+		if instruction == "update" {
+			updateInstruction := ""
+			taskId := ""
+			newTaksDescription := ""
+			newTasksStatus := ""
+
+			fmt.Println("Escoja que quiere actualizar (tarea, estado)")
+			updateInstruction, _ = reader.ReadString('\n')
+			updateInstruction = strings.Trim(updateInstruction, "\r\n")
+
+			if updateInstruction == "tarea" {
+				fmt.Println("Ingrese el id de la tarea")
+				taskId, _ = reader.ReadString('\n')
+				taskId = strings.Trim(taskId, "\r\n")
+
+				fmt.Println("Ingrese la nueva descripcion")
+				newTaksDescription, _ = reader.ReadString('\n')
+				newTaksDescription = strings.Trim(newTaksDescription, "\r\n")
+				convertValue, err := strconv.Atoi(taskId)
+
+				if err != nil {
+					panic(err)
+				}
+
+				updateDescription(convertValue, newTaksDescription)
+
+			} else if updateInstruction == "estado" {
+				fmt.Println("Cambiando el estado de la tarea")
+			} else {
+				fmt.Println("Comando incorrecto, escriba tarea o estado..")
+			}
 		}
 
 		if instruction == "exit" {
