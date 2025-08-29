@@ -21,7 +21,7 @@ type TaskData struct {
 const fileName = "task.json"
 
 var instruction string = ""
-var taskInfo string
+var taskInfo string // Variable global para agregar mas tareas
 
 func createFile(info TaskData) {
 	var tasks []TaskData
