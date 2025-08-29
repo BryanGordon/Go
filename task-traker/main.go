@@ -60,7 +60,7 @@ func createFile(info TaskData) {
 
 }
 
-func updateDescription(id int, newDescription string) {
+func updateDescription(id string, newDescription string) {
 	var tasks []TaskData
 	_, err := os.Stat(fileName)
 
@@ -73,10 +73,17 @@ func updateDescription(id int, newDescription string) {
 
 		_ = json.Unmarshal(data, &tasks)
 
+		convertedId, err := strconv.Atoi(id)
+
+		if err != nil {
+			panic(err)
+		}
+
 		for index, updateTaks := range tasks {
-			if id == updateTaks.Id {
+			if convertedId == updateTaks.Id {
 				tasks[index].Description = newDescription
-			} else {
+				break
+			} else if index == len(tasks)-1 {
 				fmt.Println("No se ha podido encontrar la tarea")
 				return
 			}
@@ -141,13 +148,8 @@ func main() {
 				fmt.Println("Ingrese la nueva descripcion")
 				newTaksDescription, _ = reader.ReadString('\n')
 				newTaksDescription = strings.Trim(newTaksDescription, "\r\n")
-				convertValue, err := strconv.Atoi(taskId)
 
-				if err != nil {
-					panic(err)
-				}
-
-				updateDescription(convertValue, newTaksDescription)
+				updateDescription(taskId, newTaksDescription)
 
 			} else if updateInstruction == "estado" {
 				fmt.Println("Cambiando el estado de la tarea")
