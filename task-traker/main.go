@@ -59,6 +59,48 @@ func createFile(info TaskData) {
 
 }
 
+func updateDescription(id int, newDescription string) {
+	var tasks []TaskData
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			panic(err)
+		}
+
+		_ = json.Unmarshal(data, &tasks)
+
+		for index, updateTaks := range tasks {
+			if id == updateTaks.Id {
+				tasks[index].Description = newDescription
+			} else {
+				fmt.Println("No se ha podido encontrar la tarea")
+				return
+			}
+		}
+		newJson, err := json.MarshalIndent(tasks, "", " ")
+
+		if err != nil {
+			panic(err)
+		}
+
+		err = os.WriteFile(fileName, newJson, 0644)
+
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Descripcion actualizada correctamente")
+	}
+
+}
+
+func updateStatus(id int, newStatus string) {
+
+}
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	idGlobal := 1
