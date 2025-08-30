@@ -105,8 +105,50 @@ func updateDescription(id string, newDescription string) {
 
 }
 
-func updateStatus(id int, newStatus string) {
+func updateStatus(id string, newStatus string) {
+	var tasks []TaskData
+	_, err := os.Stat(fileName)
 
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			panic(err)
+		}
+
+		_ = json.Unmarshal(data, &tasks)
+		convertdId, err := strconv.Atoi(id)
+
+		if err != nil {
+			panic(err)
+		}
+
+		for index, tasksValues := range tasks {
+			if convertdId == tasksValues.Id {
+				tasks[index].Status = newStatus
+				break
+			} else if index == len(tasks)-1 {
+				fmt.Println("No se pudo encontrar el elemento...")
+				return
+			}
+		}
+		newJson, err := json.MarshalIndent(tasks, "", " ")
+
+		if err != nil {
+			panic(err)
+		}
+
+		err = os.WriteFile(fileName, newJson, 0644)
+
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Tarea actualizada correctamente")
+		return
+	}
+
+	fmt.Println("No se pudo encontrar el archivo")
 }
 
 func main() {
@@ -140,7 +182,8 @@ func main() {
 			updateInstruction, _ = reader.ReadString('\n')
 			updateInstruction = strings.Trim(updateInstruction, "\r\n")
 
-			if updateInstruction == "tarea" {
+			switch updateInstruction {
+			case "tarea":
 				fmt.Println("Ingrese el id de la tarea")
 				taskId, _ = reader.ReadString('\n')
 				taskId = strings.Trim(taskId, "\r\n")
@@ -151,9 +194,22 @@ func main() {
 
 				updateDescription(taskId, newTaksDescription)
 
-			} else if updateInstruction == "estado" {
-				fmt.Println("Cambiando el estado de la tarea")
-			} else {
+			case "estado":
+				fmt.Println("Ingrese el id de la tarea")
+				taskId, _ = reader.ReadString('\n')
+				taskId = strings.TrimRight(taskId, "\r\n")
+
+				fmt.Println("Escriba \"in-progress\" o \"done\" segun su estado")
+				newTasksStatus, _ = reader.ReadString('\n')
+				newTasksStatus = strings.TrimRight(newTasksStatus, "\r\n")
+
+				if newTasksStatus == "in-progress" || newTasksStatus == "done" {
+					updateStatus(taskId, newTasksStatus)
+				} else {
+					fmt.Println("Debe ingresar solamente \"in-progress\" o \"done\"")
+				}
+
+			default:
 				fmt.Println("Comando incorrecto, escriba tarea o estado..")
 			}
 		}
