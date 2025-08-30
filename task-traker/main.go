@@ -151,6 +151,8 @@ func updateStatus(id string, newStatus string) {
 	fmt.Println("No se pudo encontrar el archivo")
 }
 
+func deleteTasks() {}
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	idGlobal := 1
