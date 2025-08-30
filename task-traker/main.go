@@ -165,8 +165,10 @@ func main() {
 			fmt.Println("Ingrese el nombre de la tarea")
 			taskInfo, _ = reader.ReadString('\n')
 			taskInfo = strings.TrimRight(taskInfo, "\r\n")
+			currentTime := time.Now()
+			setTime := currentTime.Format("02-01-2006 15:04:05")
 
-			newTask := TaskData{Id: idGlobal, Description: taskInfo, Status: "todo", CreatedAt: 12, UpdatedAt: 12}
+			newTask := TaskData{Id: idGlobal, Description: taskInfo, Status: "todo", CreatedAt: setTime, UpdatedAt: setTime}
 			createFile(newTask)
 
 			idGlobal++
