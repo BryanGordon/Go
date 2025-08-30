@@ -14,8 +14,8 @@ type TaskData struct {
 	Id          int    `json:"id"`
 	Description string `json:"description"`
 	Status      string `json:"status"`
-	CreatedAt   int64  `json:"createdAt"`
-	UpdatedAt   int64  `json:"updatedAt"`
+	CreatedAt   string `json:"createdAt"`
+	UpdatedAt   string `json:"updatedAt"`
 }
 
 const fileName = "task.json"
