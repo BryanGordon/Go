@@ -151,7 +151,53 @@ func updateStatus(id string, newStatus string) {
 	fmt.Println("No se pudo encontrar el archivo")
 }
 
-func deleteTasks() {}
+func deleteTasks(id string) {
+	var task []TaskData
+
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			panic(err)
+		}
+
+		_ = json.Unmarshal(data, &task)
+
+		convertedId, err := strconv.Atoi(id)
+
+		if err != nil {
+			panic(err)
+		}
+
+		for index, tasks := range task {
+			if convertedId == tasks.Id {
+				task = append(task[:index], task[index+1:]...)
+				break
+			}
+		}
+
+		newJson, err := json.MarshalIndent(task, "", " ")
+
+		if err != nil {
+			panic(err)
+		}
+
+		err = os.WriteFile(fileName, newJson, 0644)
+
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Tarea eliminada correctamente...")
+		return
+	}
+
+	fmt.Println("No se ha podido encontrar el archivo")
+}
+
+func listTasks() {}
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
@@ -216,6 +262,16 @@ func main() {
 			default:
 				fmt.Println("Comando incorrecto, escriba tarea o estado..")
 			}
+		}
+
+		if instruction == "delete" {
+			deleteId := ""
+
+			fmt.Println("Ingre el id de la tarea a eliminar")
+			deleteId, _ = reader.ReadString('\n')
+			deleteId = strings.TrimRight(deleteId, "\r\n")
+
+			deleteTasks(deleteId)
 		}
 
 		if instruction == "exit" {
