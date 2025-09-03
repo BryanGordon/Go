@@ -197,11 +197,71 @@ func deleteTasks(id string) {
 	fmt.Println("No se ha podido encontrar el archivo")
 }
 
-func listTasks() {}
+func listTasks() {
+	var task []TaskData
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			panic(err)
+		}
+
+		_ = json.Unmarshal(data, &task)
+
+		for _, data := range task {
+			fmt.Printf("** tarea: %s, -- status: %s, -- id: %d \n", data.Description, data.Status, data.Id)
+		}
+
+		return
+	}
+
+	fmt.Println("No se ha podido leer el archivo")
+}
+
+func listTodoTasks(status string) {
+	var task []TaskData
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		switch status {
+		case "list-todo":
+			status = "todo"
+		case "list-in-progress":
+			status = "in-progress"
+		case "list-done":
+			status = "done"
+		}
+
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			panic(err)
+		}
+
+		_ = json.Unmarshal(data, &task)
+
+		cont := 0
+		for index, data := range task {
+			if status == data.Status {
+				fmt.Printf("** tarea: %s, -- status: %s, --id: %d \n", data.Description, data.Status, data.Id)
+				cont++
+			} else if index == len(task)-1 && cont == 0 {
+				fmt.Println("No se ha encontrado ninguna tarea")
+				return
+			}
+		}
+
+		return
+	}
+
+	fmt.Println("No se ha podido encontrar el archivo")
+}
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
 	idGlobal := 1
+	reader := bufio.NewReader(os.Stdin)
 
 	for {
 		fmt.Println("Ingrese un comando")
@@ -272,6 +332,22 @@ func main() {
 			deleteId = strings.TrimRight(deleteId, "\r\n")
 
 			deleteTasks(deleteId)
+		}
+
+		if instruction == "list" {
+			listTasks()
+		}
+
+		if instruction == "list-todo" {
+			listTodoTasks(instruction)
+		}
+
+		if instruction == "list-in-progress" {
+			listTodoTasks(instruction)
+		}
+
+		if instruction == "list-done" {
+			listTodoTasks(instruction)
 		}
 
 		if instruction == "exit" {
