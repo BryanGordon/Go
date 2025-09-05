@@ -1,19 +1,17 @@
 package main
 
 import (
+	"api-go/data"
+	"api-go/routes"
+	"log"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
-func home(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("Funciona"))
-}
-
 func main() {
-	routes := mux.NewRouter()
 
-	routes.HandleFunc("/", home)
+	data.ConnectionDB()
+	result := routes.GetRoutes()
 
-	http.ListenAndServe(":8080", routes)
+	log.Fatal(http.ListenAndServe(":3000", result))
+
 }
