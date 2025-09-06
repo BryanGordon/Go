@@ -8,9 +8,12 @@ import (
 
 func GetRoutes() *mux.Router {
 	routes := mux.NewRouter()
-	api := routes.PathPrefix("/api").Subrouter()
 
-	api.HandleFunc("/", controllers.GetHome).Methods("GET")
+	routes.HandleFunc("/", controllers.GetHome).Methods("GET")
+	routes.HandleFunc("/movies", GetMoviesHandler).Methods("GET")
+	routes.HandleFunc("/movies/{id}", GetMovie).Methods("GET")
+	routes.HandleFunc("/movies", PostMovie).Methods("POST")
+	routes.HandleFunc("/movies", DeleteMovie).Methods("DELETE")
 
 	return routes
 }
