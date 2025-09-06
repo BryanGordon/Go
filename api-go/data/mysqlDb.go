@@ -9,11 +9,15 @@ import (
 
 const dsn = "root:@tcp(127.0.0.1:3306)/moviebd?charset=utf8mb4&parseTime=True&loc=Local"
 
-var db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+var DB *gorm.DB
 
 func ConnectionDB() {
+	var err error
+
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
 	if err != nil {
-		log.Fatal("No se ha podido conectar a la base de datos", err)
+		log.Fatal("No se ha podido conectar a la base de datos ", err)
 	} else {
 		log.Println("Se ha conectado a la bdd")
 	}
