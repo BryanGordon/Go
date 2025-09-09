@@ -34,6 +34,20 @@ func GetMovie(res http.ResponseWriter, req *http.Request) {
 }
 
 func PostMovie(res http.ResponseWriter, req *http.Request) {
+	var newMovie models.Movie
+
+	json.NewDecoder(req.Body).Decode(&newMovie)
+
+	newDataMovie := data.DB.Table("movie").Create(&newMovie)
+	err := newDataMovie.Error
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte(err.Error()))
+	}
+
+	json.NewEncoder(res).Encode(&newMovie)
+
 	res.Write([]byte("create a new movie"))
 }
 
