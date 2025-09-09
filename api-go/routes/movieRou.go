@@ -5,6 +5,8 @@ import (
 	"api-go/models"
 	"encoding/json"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func GetMoviesHandler(res http.ResponseWriter, req *http.Request) {
@@ -18,7 +20,17 @@ func GetMoviesHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func GetMovie(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("get unique movie"))
+	var movie models.Movie
+	params := mux.Vars(req)
+	data.DB.First(&movie, params["id"])
+
+	if movie.Id == "" {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Movie not found"))
+		return
+	}
+
+	json.NewEncoder(res).Encode(&movie)
 }
 
 func PostMovie(res http.ResponseWriter, req *http.Request) {
