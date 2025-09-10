@@ -22,7 +22,7 @@ func GetMoviesHandler(res http.ResponseWriter, req *http.Request) {
 func GetMovie(res http.ResponseWriter, req *http.Request) {
 	var movie models.Movie
 	params := mux.Vars(req)
-	data.DB.First(&movie, params["id"])
+	data.DB.First(&movie, params["Id"])
 
 	if movie.Id == "" {
 		res.WriteHeader(http.StatusBadRequest)
@@ -52,5 +52,18 @@ func PostMovie(res http.ResponseWriter, req *http.Request) {
 }
 
 func DeleteMovie(res http.ResponseWriter, req *http.Request) {
+	var movie models.Movie
+	params := mux.Vars(req)
+	data.DB.First(&movie, params["Id"])
+
+	if movie.Id == "" {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("User not found"))
+		return
+	}
+
+	data.DB.Unscoped().Delete(&movie)
+	res.WriteHeader(http.StatusOK)
+
 	res.Write([]byte("delete a movie"))
 }
