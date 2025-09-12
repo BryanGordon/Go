@@ -5,6 +5,9 @@ import (
 	"net/http"
 	"second-api-go/db"
 	"second-api-go/models"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
 
 func AddProduct(res http.ResponseWriter, req *http.Request) {
@@ -32,7 +35,30 @@ func GetProducts(res http.ResponseWriter, req *http.Request) {
 }
 
 func UpdateProduct(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("update product"))
+	var updateName models.Product
+	var itemId models.Product
+	param := mux.Vars(req)
+
+	db.DB.Where("id = ?", param["id"]).First(&itemId)
+
+	if itemId.Id == uuid.Nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Product not found"))
+		return
+	}
+
+	json.NewDecoder(req.Body).Decode(&updateName)
+
+	value := db.DB.Model(&updateName).Where("id = ?", itemId.Id).Update("name", updateName.Name)
+	err := value.Error
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Can not update field"))
+		return
+	}
+
+	json.NewEncoder(res).Encode(&updateName.Name)
 }
 
 func SearchProduct(res http.ResponseWriter, req *http.Request) {
