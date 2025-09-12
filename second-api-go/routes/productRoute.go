@@ -62,7 +62,18 @@ func UpdateProduct(res http.ResponseWriter, req *http.Request) {
 }
 
 func SearchProduct(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("search product"))
+	var searchedItem models.Product
+	param := mux.Vars(req)
+
+	db.DB.Where("name = ?", param["name"]).Find(&searchedItem)
+
+	if searchedItem.Name == "" {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Product not found"))
+		return
+	}
+
+	json.NewEncoder(res).Encode(&searchedItem)
 }
 
 func DeleteProduct(res http.ResponseWriter, req *http.Request) {
