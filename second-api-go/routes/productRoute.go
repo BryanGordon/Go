@@ -77,5 +77,18 @@ func SearchProduct(res http.ResponseWriter, req *http.Request) {
 }
 
 func DeleteProduct(res http.ResponseWriter, req *http.Request) {
+	var deleteItem models.Product
+	param := mux.Vars(req)
+
+	db.DB.Where("name = ?", param["name"]).First(&deleteItem)
+
+	if deleteItem.Name == "" {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Product not found"))
+		return
+	}
+
+	db.DB.Delete(&deleteItem)
+	res.WriteHeader(http.StatusOK)
 	res.Write([]byte("delete product"))
 }
