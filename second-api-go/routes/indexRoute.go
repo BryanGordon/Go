@@ -10,5 +10,11 @@ func GetRoutes() *mux.Router {
 	routes.HandleFunc("/search/{name}", SearchProduct).Methods("GET")
 	routes.HandleFunc("/{name}", DeleteProduct).Methods("DELETE")
 
+	routes.HandleFunc("/users", GetUsers).Methods("GET")
+	routes.HandleFunc("/users/search/{name}", SearchUser).Methods("GET")
+	routes.HandleFunc("/users/{id}", UpdateRolUser).Methods("PATCH")
+	routes.HandleFunc("/users/{id}", UpdateNameUser).Methods("PATCH")
+	routes.HandleFunc("/users/{name}", DeleteUser).Methods("DELETE")
+
 	return routes
 }
