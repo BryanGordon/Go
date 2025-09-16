@@ -21,6 +21,23 @@ func GetUsers(res http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(res).Encode(&usersList)
 }
 
+func AddUsers(res http.ResponseWriter, req *http.Request) {
+	var newUser models.User
+
+	json.NewDecoder(req.Body).Decode(&newUser)
+
+	newData := db.DB.Create(&newUser)
+	err := newData.Error
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte(err.Error()))
+		return
+	}
+
+	json.NewEncoder(res).Encode(&newUser)
+}
+
 func SearchUser(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte("Get user info"))
 }
