@@ -5,6 +5,9 @@ import (
 	"net/http"
 	"second-api-go/db"
 	"second-api-go/models"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
 
 func GetUsers(res http.ResponseWriter, req *http.Request) {
@@ -54,7 +57,30 @@ func SearchUser(res http.ResponseWriter, req *http.Request) {
 }
 
 func UpdateRolUser(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("Updated user rol"))
+	var updateRol models.User
+	var userID models.User
+	param := mux.Vars(req)
+
+	db.DB.Where("id = ?", param["id"]).First(&userID)
+
+	if userID.Id == uuid.Nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("user not found"))
+		return
+	}
+
+	json.NewDecoder(req.Body).Decode(&updateRol)
+
+	updatedResult := db.DB.Model(&updateRol).Where("id = ?", userID.Id).Update("rol", updateRol.Rol)
+	err := updatedResult.Error
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Could not update field"))
+		return
+	}
+
+	json.NewEncoder(res).Encode(&updateRol.Rol)
 }
 
 func UpdateNameUser(res http.ResponseWriter, req *http.Request) {
