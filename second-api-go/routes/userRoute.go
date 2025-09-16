@@ -84,7 +84,30 @@ func UpdateRolUser(res http.ResponseWriter, req *http.Request) {
 }
 
 func UpdateNameUser(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("Updated user name"))
+	var updatedName models.User
+	var userId models.User
+	param := mux.Vars(req)
+
+	db.DB.Where("id = ?", param["id"]).First(&userId)
+
+	if userId.Id == uuid.Nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("user not found"))
+		return
+	}
+
+	json.NewDecoder(req.Body).Decode(&updatedName)
+
+	updatedResult := db.DB.Model(&updatedName).Where("id = ?", userId.Id).Update("name", updatedName.Name)
+	err := updatedResult.Error
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Could not update field"))
+		return
+	}
+
+	json.NewEncoder(res).Encode(&updatedName.Name)
 }
 
 func DeleteUser(res http.ResponseWriter, req *http.Request) {
