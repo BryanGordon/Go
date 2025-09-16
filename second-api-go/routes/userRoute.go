@@ -111,5 +111,18 @@ func UpdateNameUser(res http.ResponseWriter, req *http.Request) {
 }
 
 func DeleteUser(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("deleted user"))
+	var deletedUser models.User
+	param := mux.Vars(req)
+
+	db.DB.Where("id = ?", param["id"]).First(&deletedUser)
+
+	if deletedUser.Id == uuid.Nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("User not found"))
+		return
+	}
+
+	db.DB.Delete(&deletedUser)
+	res.WriteHeader(http.StatusOK)
+	res.Write([]byte("User deleted succesfully"))
 }
