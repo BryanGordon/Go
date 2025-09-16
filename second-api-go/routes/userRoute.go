@@ -39,7 +39,18 @@ func AddUsers(res http.ResponseWriter, req *http.Request) {
 }
 
 func SearchUser(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("Get user info"))
+	var searchedUser models.User
+	param := mux.Vars(req)
+
+	db.DB.Where("name = ?", param["name"]).Find(&searchedUser)
+
+	if searchedUser.Name == "" {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("User not found"))
+		return
+	}
+
+	json.NewEncoder(res).Encode(&searchedUser)
 }
 
 func UpdateRolUser(res http.ResponseWriter, req *http.Request) {
