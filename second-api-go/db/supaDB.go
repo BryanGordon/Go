@@ -6,8 +6,7 @@ import (
 	"github.com/supabase-community/supabase-go"
 )
 
-var api_url = ""
-var api_key = ""
+var api_url = "https://mjrqcemffmprtozbqmhi.supabase.co"
 var SupaCli *supabase.Client
 
 func SupaConnect() {
