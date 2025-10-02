@@ -15,7 +15,7 @@ var allowedHeaders = []string{"Content-Type", "Authorization"}
 
 func main() {
 	/* Conexion con local db mysql */
-	db.DbConnection()
+	// db.DbConnection()
 	/* Conexion con supabase */
 	db.SupaConnect()
 
