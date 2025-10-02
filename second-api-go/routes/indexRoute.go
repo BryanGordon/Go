@@ -4,6 +4,7 @@ import "github.com/gorilla/mux"
 
 func GetRoutes() *mux.Router {
 	routes := mux.NewRouter()
+	/* Routes with mysql */
 	routes.HandleFunc("/", GetProducts).Methods("GET")
 	routes.HandleFunc("/add", AddProduct).Methods("POST")
 	routes.HandleFunc("/{id}", UpdateProduct).Methods("PATCH")
@@ -16,6 +17,12 @@ func GetRoutes() *mux.Router {
 	routes.HandleFunc("/users/{id}", UpdateRolUser).Methods("PATCH")
 	routes.HandleFunc("/users/update/{id}", UpdateNameUser).Methods("PATCH")
 	routes.HandleFunc("/users/{id}", DeleteUser).Methods("DELETE")
+
+	/* Routes with supabase */
+	routes.HandleFunc("/supa/users", GetUsersSupa).Methods("GET")
+	routes.HandleFunc("/supa/products", GetDataSupa).Methods("GET")
+
+	routes.HandleFunc("/supa/users/search/{name}", SearchUserSupa).Methods("GET")
 
 	return routes
 }
