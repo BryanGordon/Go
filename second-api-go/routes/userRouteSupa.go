@@ -28,8 +28,6 @@ func SearchUserSupa(res http.ResponseWriter, req *http.Request) {
 	data, _, err := db.SupaCli.From("users").Select("*", "exact", false).Eq("name", param["name"]).Execute()
 
 	/* Si el usuario no existe devuelve un array vacio, arreglar eso*/
-	/* Probar si la api key publica se conecta y hace las mismas funciones que la actual*/
-	/* Probar la primera api key generica, tal vez funciona*/
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
