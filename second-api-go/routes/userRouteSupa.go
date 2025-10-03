@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"encoding/json"
 	"net/http"
 	"second-api-go/db"
+	"second-api-go/models"
 
 	"github.com/gorilla/mux"
 )
@@ -41,6 +43,20 @@ func SearchUserSupa(res http.ResponseWriter, req *http.Request) {
 }
 
 func CreateUserSupa(res http.ResponseWriter, req *http.Request) {
+	var newUser models.User
+
+	json.NewDecoder(req.Body).Decode(&newUser)
+
+	data, _, err := db.SupaCli.From("users").Insert(newUser, false, "", "minimal", "").Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte(err.Error()))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
 
 }
 
