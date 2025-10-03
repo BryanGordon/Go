@@ -23,7 +23,7 @@ func GetUsersSupa(res http.ResponseWriter, req *http.Request) {
 
 func SearchUserSupa(res http.ResponseWriter, req *http.Request) {
 	var param = mux.Vars(req)
-	data, _, err := db.SupaCli.From("users").Select("*", "", false).Eq("name", param["name"]).Execute()
+	data, _, err := db.SupaCli.From("users").Select("*", "exact", false).Eq("name", param["name"]).Execute()
 
 	/* Si el usuario no existe devuelve un array vacio, arreglar eso*/
 	/* Probar si la api key publica se conecta y hace las mismas funciones que la actual*/
