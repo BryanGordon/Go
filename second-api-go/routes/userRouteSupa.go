@@ -58,8 +58,40 @@ func CreateUserSupa(res http.ResponseWriter, req *http.Request) {
 
 }
 
-func UpdateUserSupa(res http.ResponseWriter, req *http.Request) {
+func UpdateUserRolSupa(res http.ResponseWriter, req *http.Request) {
+	var param = mux.Vars(req)
+	var newUserRol models.User
 
+	json.NewDecoder(req.Body).Decode(&newUserRol)
+
+	data, _, err := db.SupaCli.From("users").Update(newUserRol, "", "").Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Could not update the field"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
+}
+
+func UpdateUserNameSupa(res http.ResponseWriter, req *http.Request) {
+	var newUserName models.User
+	var param = mux.Vars(req)
+
+	json.NewDecoder(req.Body).Decode(&newUserName)
+
+	data, _, err := db.SupaCli.From("users").Update(newUserName, "", "").Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Could not update the field"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
 }
 
 func DeleteUserSupa(res http.ResponseWriter, req *http.Request) {
