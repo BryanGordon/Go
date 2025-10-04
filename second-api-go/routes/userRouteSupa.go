@@ -76,6 +76,7 @@ func UpdateUserRolSupa(res http.ResponseWriter, req *http.Request) {
 	res.Write(data)
 }
 
+/* Arreglar los metodos update, solo cambia un campo en cuestion y el resto se vuelve nul*/
 func UpdateUserNameSupa(res http.ResponseWriter, req *http.Request) {
 	var newUserName models.User
 	var param = mux.Vars(req)
@@ -95,5 +96,16 @@ func UpdateUserNameSupa(res http.ResponseWriter, req *http.Request) {
 }
 
 func DeleteUserSupa(res http.ResponseWriter, req *http.Request) {
+	var param = mux.Vars(req)
 
+	data, _, err := db.SupaCli.From("users").Delete("", "").Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("User could not delete"))
+		return
+	}
+
+	res.WriteHeader(http.StatusAccepted)
+	res.Write(data)
 }
