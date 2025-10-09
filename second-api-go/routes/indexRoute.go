@@ -28,5 +28,10 @@ func GetRoutes() *mux.Router {
 	routes.HandleFunc("/supa/users/update/{id}", UpdateUserRolSupa).Methods("PATCH")
 	routes.HandleFunc("/supa/users/{id}", DeleteUserSupa).Methods("DELETE")
 
+	routes.HandleFunc("/supa/products/search/{name}", SearchProductSupa).Methods("GET")
+	routes.HandleFunc("/supa/products/", CreateProductSupa).Methods("POST")
+	routes.HandleFunc("/supa/products/update-name/{id}", UpdateProductSupa).Methods("PATCH")
+	routes.HandleFunc("/supa/products/{name}", DeleteProductSupa).Methods("DELETE")
+
 	return routes
 }
