@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"second-api-go/db"
 	"second-api-go/models"
@@ -55,12 +56,19 @@ func CreateProductSupa(res http.ResponseWriter, req *http.Request) {
 }
 
 func UpdateProductSupa(res http.ResponseWriter, req *http.Request) {
-	var newName string
+	var newName models.Product
+	// var infoProduct models.Product
 	var param = mux.Vars(req)
+	var err error
+
+	infoproduct, _, err := db.SupaCli.From("products").Select("*", "", false).Eq("id", param["id"]).Execute()
+	convertedInfo := string(infoproduct)
+	fmt.Print(convertedInfo)
 
 	json.NewDecoder(req.Body).Decode(&newName)
+	fmt.Print(newName)
 
-	data, _, err := db.SupaCli.From("products").Update(newName, "", "").Eq("id", param["id"]).Execute()
+	data, _, err := db.SupaCli.From("products").Update(newName.Name, "", "").Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
