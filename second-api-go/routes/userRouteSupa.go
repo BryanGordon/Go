@@ -63,8 +63,11 @@ func UpdateUserRolSupa(res http.ResponseWriter, req *http.Request) {
 	var newUserRol models.User
 
 	json.NewDecoder(req.Body).Decode(&newUserRol)
+	updatedRolUser := map[string]any{
+		"rol": newUserRol.Rol,
+	}
 
-	data, _, err := db.SupaCli.From("users").Update(newUserRol, "", "").Eq("id", param["id"]).Execute()
+	data, _, err := db.SupaCli.From("users").Update(updatedRolUser, "", "").Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
@@ -76,14 +79,16 @@ func UpdateUserRolSupa(res http.ResponseWriter, req *http.Request) {
 	res.Write(data)
 }
 
-/* Arreglar los metodos update, solo cambia un campo en cuestion y el resto se vuelve nul*/
 func UpdateUserNameSupa(res http.ResponseWriter, req *http.Request) {
 	var newUserName models.User
 	var param = mux.Vars(req)
 
 	json.NewDecoder(req.Body).Decode(&newUserName)
+	updatedName := map[string]any{
+		"name": newUserName.Name,
+	}
 
-	data, _, err := db.SupaCli.From("users").Update(newUserName, "", "").Eq("id", param["id"]).Execute()
+	data, _, err := db.SupaCli.From("users").Update(updatedName, "", "").Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
