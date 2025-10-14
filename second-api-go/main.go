@@ -7,6 +7,7 @@ import (
 	"second-api-go/routes"
 
 	"github.com/gorilla/handlers"
+	"github.com/joho/godotenv"
 )
 
 var allowedOri = []string{"*"}
@@ -17,6 +18,8 @@ func main() {
 	/* Conexion con local db mysql */
 	// db.DbConnection()
 	/* Conexion con supabase */
+	godotenv.Load() // Siempre llamar en la funcion principal
+
 	db.SupaConnect()
 
 	data := routes.GetRoutes()
