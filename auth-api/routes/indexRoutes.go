@@ -1,7 +1,11 @@
 package routes
 
-import "github.com/gorilla/mux"
+import (
+	"github.com/gorilla/mux"
+)
 
 func GetRoutes() *mux.Router {
-	return nil
+	routes := mux.NewRouter()
+
+	return routes
 }
