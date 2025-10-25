@@ -1,27 +1,118 @@
 package routes
 
-import "net/http"
+import (
+	"auth-api/connections"
+	"auth-api/models"
+	"encoding/json"
+	"net/http"
+
+	"github.com/gorilla/mux"
+)
 
 func UserList(res http.ResponseWriter, req *http.Request) {
+	data, _, err := connections.Client.From("users").Select("*", "", false).Execute()
 
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("unable get data"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
 }
 
-func AddUser() {
+func AddUser(res http.ResponseWriter, req *http.Request) {
+	var newUser models.Users
 
+	json.NewDecoder(req.Body).Decode(&newUser)
+
+	data, _, err := connections.Client.From("users").Insert(newUser, false, "", "", "").Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Couldn't create new data"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
 }
 
-func UpdateUserName() {
+func UpdateUserName(res http.ResponseWriter, req *http.Request) {
+	var newName models.Users
+	param := mux.Vars(req)
 
+	json.NewDecoder(req.Body).Decode(&newName)
+	updatedName := map[string]any{
+		"name": newName.Name,
+	}
+
+	data, _, err := connections.Client.From("users").Update(updatedName, "", "").Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Couldn't update name"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
 }
 
-func UpdateUserMail() {
+func UpdateUserMail(res http.ResponseWriter, req *http.Request) {
+	var newMail models.Users
+	param := mux.Vars(req)
 
+	json.NewDecoder(req.Body).Decode(&newMail)
+	updatedMail := map[string]any{
+		"email": newMail.Email,
+	}
+
+	data, _, err := connections.Client.From("users").Update(updatedMail, "", "").Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Couldn't update email"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
 }
 
-func UpdateUserNick() {
+func UpdateUserNick(res http.ResponseWriter, req *http.Request) {
+	var newNick models.Users
+	param := mux.Vars(req)
 
+	json.NewDecoder(req.Body).Decode(&newNick)
+	updatedNick := map[string]any{
+		"nickname": newNick.Nickname,
+	}
+
+	data, _, err := connections.Client.From("users").Update(updatedNick, "", "").Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Couldn't update nickname"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
 }
 
-func RemoveUser() {
+func RemoveUser(res http.ResponseWriter, req *http.Request) {
+	param := mux.Vars(req)
 
+	data, _, err := connections.Client.From("users").Delete("", "").Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Couldn't delete user"))
+		return
+	}
+
+	res.WriteHeader(http.StatusAccepted)
+	res.Write(data)
 }
