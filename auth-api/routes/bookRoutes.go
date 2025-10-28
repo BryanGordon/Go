@@ -39,6 +39,21 @@ func AddBooks(res http.ResponseWriter, req *http.Request) {
 	res.Write(data)
 }
 
+func SearchBook(res http.ResponseWriter, req *http.Request) {
+	param := mux.Vars(req)
+
+	data, _, err := connections.Client.From("users").Select("*", "", false).Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Book not found"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
+}
+
 func UpdateNameBooks(res http.ResponseWriter, req *http.Request) {
 	var newName models.Book
 	param := mux.Vars(req)
