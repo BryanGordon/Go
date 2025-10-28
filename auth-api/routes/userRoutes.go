@@ -22,6 +22,21 @@ func UserList(res http.ResponseWriter, req *http.Request) {
 	res.Write(data)
 }
 
+func SearchUser(res http.ResponseWriter, req *http.Request) {
+	param := mux.Vars(req)
+
+	data, _, err := connections.Client.From("users").Select("*", "", false).Eq("id", param["id"]).Execute()
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadGateway)
+		res.Write([]byte("User not found"))
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	res.Write(data)
+}
+
 func AddUser(res http.ResponseWriter, req *http.Request) {
 	var newUser models.Users
 
