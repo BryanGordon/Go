@@ -10,7 +10,7 @@ import (
 )
 
 func UserList(res http.ResponseWriter, req *http.Request) {
-	data, _, err := connections.Client.From("users").Select("*", "", false).Execute()
+	data, _, err := connections.Client.From("readers").Select("*", "", false).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
@@ -25,7 +25,7 @@ func UserList(res http.ResponseWriter, req *http.Request) {
 func SearchUser(res http.ResponseWriter, req *http.Request) {
 	param := mux.Vars(req)
 
-	data, _, err := connections.Client.From("users").Select("*", "", false).Eq("id", param["id"]).Execute()
+	data, _, err := connections.Client.From("readers").Select("*", "", false).Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadGateway)
@@ -42,7 +42,7 @@ func AddUser(res http.ResponseWriter, req *http.Request) {
 
 	json.NewDecoder(req.Body).Decode(&newUser)
 
-	data, _, err := connections.Client.From("users").Insert(newUser, false, "", "", "").Execute()
+	data, _, err := connections.Client.From("readers").Insert(newUser, false, "", "", "").Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
@@ -63,7 +63,7 @@ func UpdateUserName(res http.ResponseWriter, req *http.Request) {
 		"name": newName.Name,
 	}
 
-	data, _, err := connections.Client.From("users").Update(updatedName, "", "").Eq("id", param["id"]).Execute()
+	data, _, err := connections.Client.From("readers").Update(updatedName, "", "").Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
@@ -84,7 +84,7 @@ func UpdateUserMail(res http.ResponseWriter, req *http.Request) {
 		"email": newMail.Email,
 	}
 
-	data, _, err := connections.Client.From("users").Update(updatedMail, "", "").Eq("id", param["id"]).Execute()
+	data, _, err := connections.Client.From("readers").Update(updatedMail, "", "").Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
@@ -105,7 +105,7 @@ func UpdateUserNick(res http.ResponseWriter, req *http.Request) {
 		"nickname": newNick.Nickname,
 	}
 
-	data, _, err := connections.Client.From("users").Update(updatedNick, "", "").Eq("id", param["id"]).Execute()
+	data, _, err := connections.Client.From("readers").Update(updatedNick, "", "").Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
@@ -120,7 +120,7 @@ func UpdateUserNick(res http.ResponseWriter, req *http.Request) {
 func RemoveUser(res http.ResponseWriter, req *http.Request) {
 	param := mux.Vars(req)
 
-	data, _, err := connections.Client.From("users").Delete("", "").Eq("id", param["id"]).Execute()
+	data, _, err := connections.Client.From("readers").Delete("", "").Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
