@@ -42,7 +42,7 @@ func AddBooks(res http.ResponseWriter, req *http.Request) {
 func SearchBook(res http.ResponseWriter, req *http.Request) {
 	param := mux.Vars(req)
 
-	data, _, err := connections.Client.From("users").Select("*", "", false).Eq("id", param["id"]).Execute()
+	data, _, err := connections.Client.From("books").Select("*", "", false).Eq("id", param["id"]).Execute()
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
