@@ -9,18 +9,18 @@ func GetRoutes() *mux.Router {
 
 	routes.HandleFunc("/", UserList).Methods("GET")
 	routes.HandleFunc("/", AddUser).Methods("POST")
-	routes.HandleFunc("/search", SearchUser).Methods("GET")
-	routes.HandleFunc("/update-name", UpdateUserName).Methods("PATCH")
-	routes.HandleFunc("/update-email", UpdateUserMail).Methods("PATCH")
-	routes.HandleFunc("/update-nick", UpdateUserNick).Methods("PATCH")
-	routes.HandleFunc("/", RemoveUser).Methods("DELETE")
+	routes.HandleFunc("/search/{id}", SearchUser).Methods("GET")
+	routes.HandleFunc("/update-name/{id}", UpdateUserName).Methods("PATCH")
+	routes.HandleFunc("/update-email/{id}", UpdateUserMail).Methods("PATCH")
+	routes.HandleFunc("/update-nick/{id}", UpdateUserNick).Methods("PATCH")
+	routes.HandleFunc("/{id}", RemoveUser).Methods("DELETE")
 
 	routes.HandleFunc("/books", ListBooks).Methods("GET")
 	routes.HandleFunc("/books", AddBooks).Methods("POST")
-	routes.HandleFunc("/search/books", SearchBook).Methods("GET")
-	routes.HandleFunc("/books/update-name", UpdateNameBooks).Methods("PATCH")
-	routes.HandleFunc("/books/update-author", UpdateBookAuthor).Methods("PATCH")
-	routes.HandleFunc("/books/update-", UpdateBookPages).Methods("PATCH")
-	routes.HandleFunc("/books", RemoveBook).Methods("DELETE")
+	routes.HandleFunc("/search/books/{id}", SearchBook).Methods("GET")
+	routes.HandleFunc("/books/update-name/{id}", UpdateNameBooks).Methods("PATCH")
+	routes.HandleFunc("/books/update-author/{id}", UpdateBookAuthor).Methods("PATCH")
+	routes.HandleFunc("/books/update-pages/{id}", UpdateBookPages).Methods("PATCH")
+	routes.HandleFunc("/books/{id}", RemoveBook).Methods("DELETE")
 	return routes
 }
