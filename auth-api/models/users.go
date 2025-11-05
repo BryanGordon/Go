@@ -6,7 +6,7 @@ type Users struct {
 	Id          uuid.UUID `json:"id"`
 	Name        string    `json:"name"`
 	Email       string    `json:"email"`
-	CreatedUser string    `json:"created-user"`
+	CreatedUser string    `json:"createdUser"`
 	Nickname    string    `json:"nickname"`
 	Password    string    `json:"password"`
 }
