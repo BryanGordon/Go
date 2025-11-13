@@ -1,11 +1,16 @@
 package routes
 
 import (
+	"auth-api/connections"
+	"auth-api/middlewares"
+	"net/http"
+
 	"github.com/gorilla/mux"
 )
 
 func GetRoutes() *mux.Router {
 	routes := mux.NewRouter()
+	var supaCli = connections.Client
 	/* Routes for all users without authentication */
 	/*
 		routes.HandleFunc("/", UserList).Methods("GET")
@@ -29,17 +34,14 @@ func GetRoutes() *mux.Router {
 	routes.HandleFunc("/books", ListBooks).Methods("GET") // Accessible only for users
 
 	// All these routes is available aonly for admin users
-	routes.HandleFunc("/admin/users", UserList).Methods("GET")
-	routes.HandleFunc("/admin/users", AddUser).Methods("POST")
-	routes.HandleFunc("/admin/users/search/{id}", SearchUser).Methods("GET")
-	routes.HandleFunc("/admin/users/update-name/{id}", UpdateUserName).Methods("PATCH")
-	routes.HandleFunc("/admin/users/{id}", RemoveUser).Methods("DELETE")
+	routes.Handle("/admin/users", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(UserList)))).Methods("GET")
+	routes.Handle("/admin/users", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(AddUser)))).Methods("POST")
+	routes.Handle("/admin/users/search/{id}", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(SearchUser)))).Methods("GET")
+	routes.Handle("/admin/users/update-name/{id}", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(UpdateUserName)))).Methods("PATCH")
+	routes.Handle("/admin/users/{id}", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(RemoveUser)))).Methods("DELETE")
 
 	/* Todo */
-	// - Envolver la ruta del admin con auth
 	// - No envolver la parte del user (Envolver despues)
-	// - Registar los usuarios en supabase para el login
-	// - Agregar la columna de rol a la tabla de readers
 	// - Crear el login en el frontend
 	// - Solucionar errores
 	return routes
