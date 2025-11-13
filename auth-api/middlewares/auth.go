@@ -25,7 +25,7 @@ func AuthMiddleware(cli *supabase.Client, next http.Handler) http.Handler {
 
 		tokenString := strings.TrimPrefix(auth, "Bearer ")
 
-		jwtSecret := os.Getenv("")
+		jwtSecret := os.Getenv("SUPA_TOKEN")
 
 		token, err := jwt.Parse(tokenString, func(t *jwt.Token) (any, error) {
 			return []byte(jwtSecret), nil
