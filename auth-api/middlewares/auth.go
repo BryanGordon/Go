@@ -3,6 +3,7 @@ package middlewares
 import (
 	"auth-api/connections"
 	"context"
+	"encoding/json"
 	"net/http"
 	"os"
 	"strings"
@@ -11,10 +12,12 @@ import (
 	"github.com/supabase-community/supabase-go"
 )
 
+type contexTokenKey string
+
+var userIdKey = contexTokenKey("user_id")
+
 func AuthMiddleware(cli *supabase.Client, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		type contexTokenKey string
-		var userIdKey = contexTokenKey("user_id")
 
 		auth := req.Header.Get("Authorization")
 
@@ -43,6 +46,36 @@ func AuthMiddleware(cli *supabase.Client, next http.Handler) http.Handler {
 
 		next.ServeHTTP(res, req.WithContext(ctx))
 	})
+}
+
+func GetDataLogin(res http.ResponseWriter, req *http.Request) {
+
+	var userRol struct {
+		Rol string `json:"rol"`
+	}
+
+	userId := req.Context().Value(userIdKey)
+
+	if userId == nil {
+		http.Error(res, "Unauthorized: missing user ID", http.StatusUnauthorized)
+		return
+	}
+
+	userIdV, ok := userId.(string)
+
+	if !ok {
+		http.Error(res, "Invalid user ID type", http.StatusInternalServerError)
+		return
+	}
+
+	_, err := connections.Client.From("readers").Select("rol", "", false).Eq("id", userIdV).Single().ExecuteTo(&userRol)
+
+	if err != nil {
+		http.Error(res, "Not found", http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(res).Encode(userRol)
 }
 
 func CheckRole(cli *supabase.Client, userId string, requiried string) bool {
