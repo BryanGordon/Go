@@ -94,7 +94,7 @@ func CheckRole(cli *supabase.Client, userId string, requiried string) bool {
 
 func AdminAuthMiddleware(cli *supabase.Client, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		userId := req.Context().Value("user_id").(string)
+		userId := req.Context().Value(userIdKey).(string)
 
 		if !CheckRole(cli, userId, "admin") {
 			http.Error(res, "Access not authorized", http.StatusForbidden)
