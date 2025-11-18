@@ -18,7 +18,7 @@ func UserList(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	res.WriteHeader(http.StatusOK)
+	/*res.WriteHeader(http.StatusOK)*/
 	res.Write(data)
 }
 
