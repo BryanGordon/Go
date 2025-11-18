@@ -4,6 +4,7 @@ import (
 	"auth-api/connections"
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -80,16 +81,22 @@ func GetDataLogin(res http.ResponseWriter, req *http.Request) {
 
 func CheckRole(cli *supabase.Client, userId string, requiried string) bool {
 	var clientRole struct {
-		Role string `json:"role"`
+		Rol string `json:"rol"`
 	}
 
-	_, err := connections.Client.From("readers").Select("role", "", false).Eq("id", userId).Single().ExecuteTo(&clientRole)
+	_, err := connections.Client.From("readers").Select("rol", "", false).Eq("id", userId).Single().ExecuteTo(&clientRole)
+	log.Print("datos del usuario: ", clientRole)
+	log.Print("id del usuario: ", userId)
+	log.Print("requiered: ", requiried)
 
 	if err != nil {
+		log.Print("Existe un error")
 		return false
 	}
 
-	return clientRole.Role == requiried
+	aux := clientRole.Rol == requiried
+	log.Print("Igualdad: ", aux)
+	return clientRole.Rol == requiried
 }
 
 func AdminAuthMiddleware(cli *supabase.Client, next http.Handler) http.Handler {
