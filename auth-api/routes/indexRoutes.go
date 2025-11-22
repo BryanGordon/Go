@@ -36,16 +36,15 @@ func GetRoutes() *mux.Router {
 	// Route protected for get user role on login
 	routes.Handle("/login", middlewares.AuthMiddleware(supaCli, http.HandlerFunc(middlewares.GetDataLogin))).Methods("GET")
 
-	// All these routes is available aonly for admin users
+	// All these routes is available only for admin users
+	// user management
 	routes.Handle("/admin/users", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(UserList)))).Methods("GET")
 	routes.Handle("/admin/users", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(AddUser)))).Methods("POST")
 	routes.Handle("/admin/users/search/{id}", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(SearchUser)))).Methods("GET")
 	routes.Handle("/admin/users/update-name/{id}", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(UpdateUserName)))).Methods("PATCH")
 	routes.Handle("/admin/users/{id}", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(RemoveUser)))).Methods("DELETE")
 
-	/* Todo */
-	// - No envolver la parte del user (Envolver despues)
-	// - Crear el login en el frontend
-	// - Solucionar errores
+	// book management
+
 	return routes
 }
