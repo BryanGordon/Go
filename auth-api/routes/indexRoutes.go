@@ -31,7 +31,7 @@ func GetRoutes() *mux.Router {
 	*/
 
 	/*Routes with authentication*/
-	routes.HandleFunc("/books", ListBooks).Methods("GET") // Accessible only for users
+	routes.Handle("/books", middlewares.AuthMiddleware(supaCli, http.HandlerFunc(ListBooks))).Methods("GET") // Accessible only for users
 
 	// Route protected for get user role on login
 	routes.Handle("/login", middlewares.AuthMiddleware(supaCli, http.HandlerFunc(middlewares.GetDataLogin))).Methods("GET")
