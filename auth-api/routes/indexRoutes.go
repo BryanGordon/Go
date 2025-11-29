@@ -47,6 +47,7 @@ func GetRoutes() *mux.Router {
 	// book management
 	routes.Handle("/books", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(AddBooks)))).Methods("GET")
 	routes.Handle("/search/books/{id}", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(SearchBook)))).Methods("GET")
+	routes.Handle("/books", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(AddBooks)))).Methods("POST")
 	routes.Handle("/books/update-name/{id}", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(UpdateNameBooks)))).Methods("POST")
 	routes.Handle("/books", middlewares.AuthMiddleware(supaCli, middlewares.AdminAuthMiddleware(supaCli, http.HandlerFunc(RemoveBook)))).Methods("REMOVE")
 
