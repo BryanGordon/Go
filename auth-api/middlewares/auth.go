@@ -105,6 +105,7 @@ func AdminAuthMiddleware(cli *supabase.Client, next http.Handler) http.Handler {
 
 		if !CheckRole(cli, userId, "admin") {
 			http.Error(res, "Access not authorized", http.StatusForbidden)
+			return
 		}
 
 		next.ServeHTTP(res, req)
