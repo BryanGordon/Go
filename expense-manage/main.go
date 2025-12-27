@@ -2,18 +2,30 @@ package main
 
 import "fmt"
 
+func addExpense() {
+
+}
+
+func listExpenses() {
+
+}
+
 func main() {
 	const input = ""
 
-	if input == "exit" {
-		fmt.Println("Saliendo de la aplicacion...")
-	}
-	if input == "list" {
-		fmt.Println("Enseñar lista")
-	}
+	for {
+		if input == "exit" {
+			fmt.Println("Saliendo de la aplicacion...")
+			break
+		}
 
-	if input == "add" {
-		fmt.Println("Agregando gastos")
+		if input == "list" {
+			fmt.Println("Enseñar lista")
+		}
+
+		if input == "add" {
+			fmt.Println("Agregando gastos")
+		}
 	}
 
 }
