@@ -55,7 +55,9 @@ func createFile(newData Expensives) {
 	}
 }
 
-func addExpense() {
+/*
+func addExpense(newExpense Expensives) {
+	var expenses []Expensives
 
 }
 
@@ -65,6 +67,7 @@ func listExpenses() {
 
 func main() {
 	var input = ""
+	globalId := 1
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("Iniciando app..")
