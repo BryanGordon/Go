@@ -12,10 +12,10 @@ import (
 var fileName = "expensives-list"
 
 type Expensives struct {
-	Id          string `json:"id"`
+	Id          int    `json:"id"`
 	Date        string `json:"date"`
 	Description string `json:"description"`
-	Amount      int64  `json:"amount"`
+	Amount      int    `json:"amount"`
 }
 
 func createFile(newData Expensives) {
