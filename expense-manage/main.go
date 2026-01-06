@@ -60,6 +60,7 @@ func addExpense(newExpense Expensives) {
 	var expenses []Expensives
 
 }
+*/
 
 func listExpenses() {
 	var expensives []Expensives
