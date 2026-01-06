@@ -116,12 +116,10 @@ func main() {
 		}
 
 		if input == "list" {
-			newData := []Expensives
-			fmt.Println("Enseñar lista")
-			createFile(newData)
+			listExpenses()
 		}
 
-		if input == "add" {
+		if input == "update" {
 			fmt.Println("Agregando gastos")
 		}
 	}
