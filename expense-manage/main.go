@@ -68,10 +68,12 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("Iniciando app..")
-	input, _ = reader.ReadString('\n')
-	input = strings.TrimSpace(input)
 
 	for {
+		fmt.Println("Ingrese un comando")
+		input, _ = reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+
 		if input == "exit" {
 			fmt.Println("Saliendo de la aplicacion...")
 			time.Sleep(1 * time.Second)
