@@ -62,7 +62,26 @@ func addExpense(newExpense Expensives) {
 }
 
 func listExpenses() {
+	var expensives []Expensives
+	_, err := os.Stat(fileName)
 
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			fmt.Println("Error al leer el archivo")
+			return
+		}
+		_ = json.Unmarshal(data, &expensives)
+
+		for _, data := range expensives {
+			fmt.Printf("-- ID: %s , Date: %s , Description: %s , Cantidad: $%d .", data.Id, data.Date, data.Description, data.Amount)
+		}
+
+		return
+	}
+
+	fmt.Println("No se ha encontrado el archivo")
 }
 
 func main() {
