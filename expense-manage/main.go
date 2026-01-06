@@ -102,6 +102,19 @@ func main() {
 			break
 		}
 
+		if input == "add" {
+			fmt.Println("Ingrese la descripcion del gasto")
+			descriptionEx, _ := reader.ReadString('\n')
+			descriptionEx = strings.TrimRight(descriptionEx, "\r\n")
+
+			fmt.Println("Ingrese el monto")
+			amountEx, _ := reader.ReadString('\n')
+			amountEx = strings.TrimRight(amountEx, "\r\n")
+			// Cambiar el tipo de data amountEx a integer
+			newExpense := Expensives{Id: globalId, Date: "2026", Description: descriptionEx, Amount: amountEx}
+			createFile(newExpense)
+		}
+
 		if input == "list" {
 			newData := []Expensives
 			fmt.Println("Enseñar lista")
