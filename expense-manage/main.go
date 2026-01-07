@@ -76,7 +76,7 @@ func listExpenses() {
 		_ = json.Unmarshal(data, &expensives)
 
 		for _, data := range expensives {
-			fmt.Printf("-- ID: %s , Date: %s , Description: %s , Cantidad: $%d .", data.Id, data.Date, data.Description, data.Amount)
+			fmt.Printf("-- ID: %d , Date: %s , Description: %s , Cantidad: $%d . \n", data.Id, data.Date, data.Description, data.Amount)
 		}
 
 		return
