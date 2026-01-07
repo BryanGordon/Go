@@ -85,6 +85,78 @@ func listExpenses() {
 	fmt.Println("No se ha encontrado el archivo")
 }
 
+func updateDescription(id string, newDescription string) {
+	var expensives []Expensives
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			fmt.Println("Error al leer el archivo.")
+			return
+		}
+
+		_ = json.Unmarshal(data, &expensives)
+		convertId, _ := strconv.Atoi(id)
+
+		for index, expensivesData := range expensives {
+			if expensives[index].Id == convertId {
+
+			}
+		}
+	}
+
+	fmt.Println("\033[31mNo se ha encontrado el archivo.\033[0m")
+}
+
+func updateAmount(id string, newAmount string) {
+	var expenses []Expensives
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			fmt.Println("Error al leer el archivo.")
+			return
+		}
+
+		_ = json.Unmarshal(data, &expenses)
+		convertedId, _ := strconv.Atoi(id)
+
+		for index, expensivesData := range expenses {
+			if convertedId == expensivesData.Id {
+				convertedAmount, _ := strconv.Atoi(newAmount)
+				expenses[index].Amount = convertedAmount
+				break
+			} else if index == len(expenses)-1 {
+				fmt.Println("No se ha encontrado el elemento...")
+				return
+			}
+		}
+
+		newJson, err := json.MarshalIndent(expenses, "", " ")
+
+		if err != nil {
+			fmt.Println("Ocurrio un error.")
+			return
+		}
+
+		err = os.WriteFile(fileName, newJson, 0644)
+
+		if err != nil {
+			fmt.Println("Error al modificar el json")
+			return
+		}
+
+		fmt.Println("Monto actualizado correctamente.")
+		return
+	}
+
+	fmt.Println("No se ha encontrado el archivo.")
+}
+
 func main() {
 	var input = ""
 	globalId := 1
