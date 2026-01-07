@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -183,8 +184,8 @@ func main() {
 			fmt.Println("Ingrese el monto")
 			amountEx, _ := reader.ReadString('\n')
 			amountEx = strings.TrimRight(amountEx, "\r\n")
-			// Cambiar el tipo de data amountEx a integer
-			newExpense := Expensives{Id: globalId, Date: "2026", Description: descriptionEx, Amount: amountEx}
+			convAmountEx, _ := strconv.Atoi(amountEx)
+			newExpense := Expensives{Id: globalId, Date: "2026", Description: descriptionEx, Amount: convAmountEx}
 			createFile(newExpense)
 		}
 
