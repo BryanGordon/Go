@@ -193,9 +193,23 @@ func main() {
 			listExpenses()
 		}
 
-		if input == "update" {
-			fmt.Println("Agregando gastos")
+		if input == "update-description" {
+			fmt.Println("Actualizar descripcion")
+			updateDescription("1", "sfd")
 		}
+
+		if input == "update-amount" {
+			fmt.Println("Ingrese el nuevo monto.")
+			newAmountEx, _ := reader.ReadString('\n')
+			newAmountEx = strings.TrimRight(newAmountEx, "\r\n")
+
+			fmt.Println("Ingrese el ID del gasto.")
+			idEx, _ := reader.ReadString('\n')
+			idEx = strings.TrimRight(idEx, "\r\n")
+
+			updateAmount(idEx, newAmountEx)
+		}
+
 	}
 
 }
