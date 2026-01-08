@@ -287,8 +287,15 @@ func main() {
 		}
 
 		if input == "update-description" {
-			fmt.Println("Actualizar descripcion")
-			updateDescription("1", "sfd")
+			fmt.Println("Ingrese la nueva descripcion.")
+			newDescriptionEx, _ := reader.ReadString('\n')
+			newDescriptionEx = strings.TrimRight(newDescriptionEx, "\r\n")
+
+			fmt.Println("Ingrese el ID del gasto.")
+			idEx, _ := reader.ReadString('\n')
+			idEx = strings.TrimRight(idEx, "\r\n")
+
+			updateDescription(idEx, newDescriptionEx)
 		}
 
 		if input == "update-amount" {
