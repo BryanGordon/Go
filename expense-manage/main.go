@@ -280,6 +280,7 @@ func main() {
 			convAmountEx, _ := strconv.Atoi(amountEx)
 			newExpense := Expensives{Id: globalId, Date: "2026", Description: descriptionEx, Amount: convAmountEx}
 			createFile(newExpense)
+			globalId++
 		}
 
 		if input == "list" {
