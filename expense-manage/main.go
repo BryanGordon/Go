@@ -224,6 +224,33 @@ func delete(id string) {
 
 	fmt.Println("No se ha encontrado el archivo.")
 }
+
+func summaryExpensives() {
+	var expensives []Expensives
+	summary := 0
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			fmt.Println("Error al lerr el archivo.")
+			return
+		}
+
+		_ = json.Unmarshal(data, &expensives)
+
+		for _, expensivesData := range expensives {
+			summary += expensivesData.Amount
+		}
+
+		fmt.Printf("El valor total de los gastos es: %d \n", summary)
+		return
+	}
+
+	fmt.Println("No se ha encontrado el archivo")
+}
+
 func main() {
 	var input = ""
 	globalId := 1
