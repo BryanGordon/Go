@@ -311,6 +311,17 @@ func main() {
 			updateAmount(idEx, newAmountEx)
 		}
 
+		if input == "delete" {
+			fmt.Println("Ingrese el ID que desea borrar.")
+			idEx, _ := reader.ReadString('\n')
+			idEx = strings.TrimRight(idEx, "\r\n")
+			delete(idEx)
+		}
+
+		if input == "summary" {
+			summaryExpensives()
+		}
+
 	}
 
 }
