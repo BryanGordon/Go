@@ -102,10 +102,31 @@ func updateDescription(id string, newDescription string) {
 		convertId, _ := strconv.Atoi(id)
 
 		for index, expensivesData := range expensives {
-			if expensives[index].Id == convertId {
-
+			if convertId == expensivesData.Id {
+				expensives[index].Description = newDescription
+				break
+			} else if index == len(expensives)-1 {
+				fmt.Println("No se ha podido encontrar el elemento...")
+				return
 			}
 		}
+
+		newJson, err := json.MarshalIndent(expensives, "", " ")
+
+		if err != nil {
+			fmt.Println("Error al crear el json.")
+			return
+		}
+
+		err = os.WriteFile(fileName, newJson, 0644)
+
+		if err != nil {
+			fmt.Println("Error al modificar el json.")
+			return
+		}
+
+		fmt.Println("Descripcion actualizada correctamente.")
+		return
 	}
 
 	fmt.Println("\033[31mNo se ha encontrado el archivo.\033[0m")
