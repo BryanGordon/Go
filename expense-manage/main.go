@@ -179,6 +179,51 @@ func updateAmount(id string, newAmount string) {
 	fmt.Println("No se ha encontrado el archivo.")
 }
 
+func delete(id string) {
+	var expensives []Expensives
+	_, err := os.Stat(fileName)
+
+	if err == nil {
+		data, err := os.ReadFile(fileName)
+
+		if err != nil {
+			fmt.Println("Error al leer el archivo.")
+			return
+		}
+
+		_ = json.Unmarshal(data, &expensives)
+		convertId, err := strconv.Atoi(id)
+
+		for index, expensivesData := range expensives {
+			if expensivesData.Id == convertId {
+				expensives = append(expensives[:index], expensives[index+1:]...)
+				break
+			} else if index == len(expensives)-1 {
+				fmt.Println("No se ha encontrado el elemento.")
+				return
+			}
+		}
+
+		newJson, err := json.MarshalIndent(expensives, "", " ")
+
+		if err != nil {
+			fmt.Println("Error al crear el json.")
+			return
+		}
+
+		err = os.WriteFile(fileName, newJson, 0644)
+
+		if err != nil {
+			fmt.Println("Error al modificar el archivo.")
+			return
+		}
+
+		fmt.Println("Gasto borrado de manera exitosa.")
+		return
+	}
+
+	fmt.Println("No se ha encontrado el archivo.")
+}
 func main() {
 	var input = ""
 	globalId := 1
