@@ -47,8 +47,11 @@ func main() {
 		if convertedGuessNumber == numberToGuess {
 			fmt.Println("You win")
 			return
-		} else {
-			fmt.Println("Wrong number, try again")
+		} else if numberToGuess > convertedGuessNumber {
+			fmt.Printf("The number is higher than %d \n", convertedGuessNumber)
+			tries--
+		} else if numberToGuess < convertedGuessNumber {
+			fmt.Printf("The number is less than %d \n", convertedGuessNumber)
 			tries--
 		}
 	}
