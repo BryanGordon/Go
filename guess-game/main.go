@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"strconv"
 	"strings"
@@ -35,7 +36,8 @@ func main() {
 	fmt.Printf("You choose a %s mode.", input)
 	fmt.Println("Try guess the number!")
 
-	numberToGuess := 10
+	numberToGuess := rand.Intn(500)
+	fmt.Println(numberToGuess)
 
 	for tries > 0 {
 		guessNumber, _ := reader.ReadString('\n')
@@ -51,5 +53,5 @@ func main() {
 		}
 	}
 
-	fmt.Println("You lose.")
+	fmt.Printf("You lose. The number was %d", numberToGuess)
 }
