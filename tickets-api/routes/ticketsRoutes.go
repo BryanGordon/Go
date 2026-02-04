@@ -4,10 +4,15 @@ func GenerateTicket() {
 
 }
 
-func DeleteTicket(id string) {
+func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 
 }
 
-func InvalidateTicket(id string) {
+func DeleteTicket(res http.ResponseWriter, req *http.Request) {
+	// pedir id string como parametro
+}
+
+func InvalidateTicket(res http.ResponseWriter, req *http.Request) {
+	// pedir id string como parametro
 
 }
