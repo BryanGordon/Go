@@ -51,7 +51,37 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 }
 
 func GenerateTicketMovie(res http.ResponseWriter, req *http.Request) {
+	var ticketList []models.Ticket
 
+	_, err := os.Stat(filename)
+
+	if err == nil {
+		data, err := os.ReadFile(filename)
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("File could not read"))
+			return
+		}
+
+		_ = json.Unmarshal(data, &ticketList)
+		newTicket := models.Ticket{Id: "2", Type: "Movie", Number: generateRandomNumber()}
+		ticketList = append(ticketList, newTicket)
+		dataJson, err := json.MarshalIndent(ticketList, "", "")
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Could not write the file"))
+			return
+		}
+
+		res.WriteHeader(http.StatusOK)
+		res.Write(dataJson)
+		return
+	}
+
+	res.WriteHeader(http.StatusBadRequest)
+	res.Write([]byte("File not found"))
 }
 
 func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
