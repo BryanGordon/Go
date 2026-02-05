@@ -2,18 +2,22 @@ package routes
 
 import (
 	"encoding/json"
+	"math/rand/v2"
 	"net/http"
 	"os"
 	"ticket-api/models"
-
-	"github.com/gorilla/mux"
 )
 
 var filename string = "tickets.json"
 
+func generateRandomNumber() int {
+	number := rand.Int()
+	return number
+}
+
 func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 	var ticketList []models.Ticket
-	params := mux.Vars(req)
+	// params := mux.Vars(req)
 
 	_, err := os.Stat(filename)
 
@@ -27,8 +31,19 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 		}
 
 		_ = json.Unmarshal(data, &ticketList)
-		newTicket := models.Ticket{Id: params["id"], Type: "Concert", Number: 1231}
+		newTicket := models.Ticket{Id: "1", Type: "Concert", Number: generateRandomNumber()}
 		ticketList = append(ticketList, newTicket)
+		dataJson, err := json.MarshalIndent(ticketList, "", "")
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Data not saved"))
+			return
+		}
+
+		res.WriteHeader(http.StatusOK)
+		res.Write(dataJson)
+		return
 	}
 
 	res.WriteHeader(http.StatusBadRequest)
