@@ -10,5 +10,4 @@ func main() {
 	data := routes.Routes()
 
 	log.Fatal(http.ListenAndServe(":3000", data))
-
 }
