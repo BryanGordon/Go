@@ -5,8 +5,8 @@ import "github.com/gorilla/mux"
 func Routes() *mux.Router {
 	routes := mux.NewRouter()
 
-	routes.HandleFunc("/concert-tickets", GenerateTicketConcert)
-	routes.HandleFunc("/movies-tickets", GenerateTicketMovie)
+	routes.HandleFunc("/concert-tickets", GenerateTicketConcert).Methods("POST")
+	routes.HandleFunc("/movies-tickets", GenerateTicketMovie).Methods("POST")
 
 	return routes
 }
