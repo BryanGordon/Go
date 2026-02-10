@@ -84,6 +84,27 @@ func GenerateTicketMovie(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte("File not found"))
 }
 
+func GetAllTickets(res http.ResponseWriter, req *http.Request) {
+	_, err := os.Stat(filename)
+
+	if err == nil {
+		data, err := os.ReadFile(filename)
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Error reading data"))
+			return
+		}
+
+		res.WriteHeader(http.StatusOK)
+		res.Write(data)
+		return
+	}
+
+	res.WriteHeader(http.StatusBadRequest)
+	res.Write([]byte("Could not found the file."))
+}
+
 func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 
 }
