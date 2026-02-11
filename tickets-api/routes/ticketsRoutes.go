@@ -41,8 +41,24 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
+		err = os.WriteFile(filename, dataJson, 0644)
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Could not update data file."))
+			return
+		}
+
+		ticketData, err := json.Marshal(newTicket)
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Error encoding new ticket value."))
+			return
+		}
+
 		res.WriteHeader(http.StatusOK)
-		res.Write(dataJson)
+		res.Write([]byte(ticketData))
 		return
 	}
 
@@ -75,8 +91,23 @@ func GenerateTicketMovie(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
+		err = os.WriteFile(filename, dataJson, 0644)
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Could not update data file"))
+			return
+		}
+
+		ticketData, _ := json.Marshal(newTicket)
+		/*
+			if err != nil {
+				res.WriteHeader(http.StatusBadRequest)
+				res.Write([]byte("Could not encode new ticket data."))
+			}
+		*/
 		res.WriteHeader(http.StatusOK)
-		res.Write(dataJson)
+		res.Write(ticketData)
 		return
 	}
 
