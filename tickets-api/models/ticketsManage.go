@@ -1,7 +1,7 @@
 package models
 
 type TicketAvailable struct {
-	Concert string `json:"concert"`
-	Movie   string `json:"type"`
-	Train   string `json:"train"`
+	Concert []Ticket `json:"concert"`
+	Movie   string   `json:"type"`
+	Train   string   `json:"train"`
 }
