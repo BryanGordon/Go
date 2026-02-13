@@ -16,7 +16,7 @@ func generateRandomNumber() int {
 }
 
 func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
-	var ticketList []models.Ticket
+	// var ticketList []models.Ticket
 	var allTicket models.TicketAvailable
 	// params := mux.Vars(req)
 
@@ -31,11 +31,11 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		_ = json.Unmarshal(data, &ticketList)
+		_ = json.Unmarshal(data, &allTicket)
 		newTicket := models.Ticket{Id: "1", Type: "Concert", Number: generateRandomNumber()}
 		allTicket.Concert = append(allTicket.Concert, newTicket)
 		// ticketList = append(ticketList, newTicket)
-		dataJson, err := json.MarshalIndent(ticketList, "", "")
+		dataJson, err := json.MarshalIndent(allTicket, "", " ")
 
 		if err != nil {
 			res.WriteHeader(http.StatusBadRequest)
