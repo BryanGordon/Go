@@ -16,7 +16,6 @@ func generateRandomNumber() int {
 }
 
 func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
-	// var ticketList []models.Ticket
 	var allTicket models.TicketAvailable
 	// params := mux.Vars(req)
 
@@ -34,7 +33,6 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 		_ = json.Unmarshal(data, &allTicket)
 		newTicket := models.Ticket{Id: "1", Type: "Concert", Number: generateRandomNumber()}
 		allTicket.Concert = append(allTicket.Concert, newTicket)
-		// ticketList = append(ticketList, newTicket)
 		dataJson, err := json.MarshalIndent(allTicket, "", " ")
 
 		if err != nil {
@@ -51,13 +49,7 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		ticketData, err := json.Marshal(newTicket)
-
-		if err != nil {
-			res.WriteHeader(http.StatusBadRequest)
-			res.Write([]byte("Error encoding new ticket value."))
-			return
-		}
+		ticketData, _ := json.Marshal(newTicket)
 
 		res.WriteHeader(http.StatusOK)
 		res.Write([]byte(ticketData))
@@ -102,12 +94,7 @@ func GenerateTicketMovie(res http.ResponseWriter, req *http.Request) {
 		}
 
 		ticketData, _ := json.Marshal(newTicket)
-		/*
-			if err != nil {
-				res.WriteHeader(http.StatusBadRequest)
-				res.Write([]byte("Could not encode new ticket data."))
-			}
-		*/
+
 		res.WriteHeader(http.StatusOK)
 		res.Write(ticketData)
 		return
