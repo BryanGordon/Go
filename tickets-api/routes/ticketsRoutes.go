@@ -69,7 +69,7 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 }
 
 func GenerateTicketMovie(res http.ResponseWriter, req *http.Request) {
-	var ticketList []models.Ticket
+	var ticketsAvailable models.TicketAvailable
 
 	_, err := os.Stat(filename)
 
@@ -82,10 +82,10 @@ func GenerateTicketMovie(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		_ = json.Unmarshal(data, &ticketList)
+		_ = json.Unmarshal(data, &ticketsAvailable)
 		newTicket := models.Ticket{Id: "2", Type: "Movie", Number: generateRandomNumber()}
-		ticketList = append(ticketList, newTicket)
-		dataJson, err := json.MarshalIndent(ticketList, "", "")
+		ticketsAvailable.Movie = append(ticketsAvailable.Movie, newTicket)
+		dataJson, err := json.MarshalIndent(ticketsAvailable, " ", "")
 
 		if err != nil {
 			res.WriteHeader(http.StatusBadRequest)
