@@ -126,7 +126,48 @@ func GetAllTickets(res http.ResponseWriter, req *http.Request) {
 }
 
 func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
+	var ticketList models.TicketAvailable
 
+	_, err := os.Stat(filename)
+
+	if err == nil {
+		data, err := os.ReadFile(filename)
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Could not read the file."))
+			return
+		}
+
+		_ = json.Unmarshal(data, &ticketList)
+
+		newTicket := models.Ticket{Id: "3", Type: "Train", Number: generateRandomNumber()}
+		ticketList.Train = append(ticketList.Train, newTicket)
+		newDataJson, err := json.MarshalIndent(ticketList, " ", " ")
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("File error."))
+			return
+		}
+
+		err = os.WriteFile(filename, newDataJson, 0644)
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Could not update file"))
+			return
+		}
+
+		newTicketData, _ := json.Marshal(newTicket)
+
+		res.WriteHeader(http.StatusOK)
+		res.Write(newTicketData)
+		return
+	}
+
+	res.WriteHeader(http.StatusBadRequest)
+	res.Write([]byte("File not found"))
 }
 
 func DeleteTicket(res http.ResponseWriter, req *http.Request) {
