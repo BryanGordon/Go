@@ -5,14 +5,26 @@ import (
 	"math/rand/v2"
 	"net/http"
 	"os"
+	"strconv"
 	"ticket-api/models"
 )
 
 var filename string = "tickets.json"
+var letters string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-func generateRandomNumber() int {
-	number := rand.Int()
-	return number
+func generateRandomNumber() string {
+	number := rand.IntN(99999999999)
+	convertNumber := strconv.Itoa(number)
+	return convertNumber
+}
+
+func generateRandomTicketNumber() string {
+	number := rand.IntN(99999999999)
+	letter := letters[rand.IntN(len(letters))]
+	convertNumber := strconv.Itoa(number)
+
+	result := convertNumber + " - " + string(letter)
+	return result
 }
 
 func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
@@ -141,7 +153,7 @@ func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 
 		_ = json.Unmarshal(data, &ticketList)
 
-		newTicket := models.Ticket{Id: "3", Type: "Train", Number: generateRandomNumber()}
+		newTicket := models.Ticket{Id: "3", Type: "Train", Number: generateRandomTicketNumber()}
 		ticketList.Train = append(ticketList.Train, newTicket)
 		newDataJson, err := json.MarshalIndent(ticketList, " ", " ")
 
