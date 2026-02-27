@@ -181,12 +181,3 @@ func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 	res.WriteHeader(http.StatusBadRequest)
 	res.Write([]byte("File not found"))
 }
-
-func DeleteTicket(res http.ResponseWriter, req *http.Request) {
-	// pedir id string como parametro
-}
-
-func InvalidateTicket(res http.ResponseWriter, req *http.Request) {
-	// pedir id string como parametro
-
-}
