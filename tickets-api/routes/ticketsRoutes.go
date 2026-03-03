@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 	"ticket-api/models"
+
+	"github.com/gofrs/uuid"
 )
 
 var filename string = "tickets.json"
@@ -42,7 +44,15 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 		}
 
 		_ = json.Unmarshal(data, &allTicket)
-		newTicket := models.Ticket{Id: "1", Type: "Concert", Number: generateRandomNumber()}
+		keyID, err := uuid.NewV6()
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Error creating new ticket."))
+			return
+		}
+
+		newTicket := models.Ticket{Id: keyID, Type: "Concert", Number: generateRandomNumber()}
 		allTicket.Concert = append(allTicket.Concert, newTicket)
 		dataJson, err := json.MarshalIndent(allTicket, " ", " ")
 
@@ -86,7 +96,15 @@ func GenerateTicketMovie(res http.ResponseWriter, req *http.Request) {
 		}
 
 		_ = json.Unmarshal(data, &ticketsAvailable)
-		newTicket := models.Ticket{Id: "2", Type: "Movie", Number: generateRandomNumber()}
+		keyId, err := uuid.NewV6()
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Error creating new ticket."))
+			return
+		}
+
+		newTicket := models.Ticket{Id: keyId, Type: "Movie", Number: generateRandomNumber()}
 		ticketsAvailable.Movie = append(ticketsAvailable.Movie, newTicket)
 		dataJson, err := json.MarshalIndent(ticketsAvailable, " ", " ")
 
@@ -151,8 +169,15 @@ func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 		}
 
 		_ = json.Unmarshal(data, &ticketList)
+		keyId, err := uuid.NewV6()
 
-		newTicket := models.Ticket{Id: "3", Type: "Train", Number: generateRandomTicketNumber()}
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Error creating new ticket."))
+			return
+		}
+
+		newTicket := models.Ticket{Id: keyId, Type: "Train", Number: generateRandomTicketNumber()}
 		ticketList.Train = append(ticketList.Train, newTicket)
 		newDataJson, err := json.MarshalIndent(ticketList, " ", " ")
 
