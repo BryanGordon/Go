@@ -9,6 +9,7 @@ import (
 	"ticket-api/models"
 
 	"github.com/gofrs/uuid"
+	"github.com/gorilla/mux"
 )
 
 var filename string = "tickets.json"
@@ -204,4 +205,26 @@ func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 
 	res.WriteHeader(http.StatusBadRequest)
 	res.Write([]byte("File not found"))
+}
+
+func ValidateTicket(res http.ResponseWriter, req *http.Request) {
+	var params = mux.Vars(req)
+	var tickets models.TicketAvailable
+
+	_, err := os.Stat(filename)
+
+	if err == nil {
+		data, err := os.ReadFile(filename)
+
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Error reading data."))
+			return
+		}
+
+		_ = json.Unmarshal(data, &tickets)
+	}
+
+	res.WriteHeader(http.StatusBadRequest)
+	res.Write([]byte("Couldn't read data file."))
 }
