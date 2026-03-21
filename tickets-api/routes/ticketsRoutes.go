@@ -207,7 +207,7 @@ func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte("File not found"))
 }
 
-func ValidateTicket(res http.ResponseWriter, req *http.Request) {
+func ValidateTicket(res http.ResponseWriter, req *http.Request) bool {
 	var params = mux.Vars(req)
 	var tickets models.TicketAvailable
 
@@ -219,12 +219,88 @@ func ValidateTicket(res http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			res.WriteHeader(http.StatusBadRequest)
 			res.Write([]byte("Error reading data."))
-			return
+			return false
 		}
 
 		_ = json.Unmarshal(data, &tickets)
+
+		for _, value := range tickets.Concert {
+			if value.Id.String() == params["id"] {
+				// Cambiar estado de
+				newJson, err := json.MarshalIndent(tickets, " ", " ")
+
+				if err != nil {
+					res.WriteHeader(http.StatusBadRequest)
+					res.Write([]byte("File error."))
+					return false
+				}
+
+				err = os.WriteFile(filename, newJson, 0644)
+
+				if err != nil {
+					res.WriteHeader(http.StatusBadRequest)
+					res.Write([]byte("Error updating file."))
+					return false
+				}
+
+				res.WriteHeader(http.StatusOK)
+				res.Write([]byte("Ticket validated."))
+				return true
+			}
+		}
+
+		for _, value := range tickets.Movie {
+			if value.Id.String() == params["id"] {
+				// cambiar valor del validacion
+				newJson, err := json.MarshalIndent(tickets, " ", " ")
+
+				if err != nil {
+					res.WriteHeader(http.StatusBadRequest)
+					res.Write([]byte("File error."))
+					return false
+				}
+
+				err = os.WriteFile(filename, newJson, 0644)
+
+				if err != nil {
+					res.WriteHeader(http.StatusBadRequest)
+					res.Write([]byte("Error updating file."))
+					return false
+				}
+
+				res.WriteHeader(http.StatusOK)
+				res.Write([]byte("Ticket validated"))
+				return true
+			}
+		}
+
+		for _, value := range tickets.Train {
+			if value.Id.String() == params["id"] {
+				// Cambiar valor
+				newJson, err := json.MarshalIndent(tickets, " ", " ")
+
+				if err != nil {
+					res.WriteHeader(http.StatusBadRequest)
+					res.Write([]byte("File error."))
+					return false
+				}
+
+				err = os.WriteFile(filename, newJson, 0644)
+
+				if err != nil {
+					res.WriteHeader(http.StatusBadRequest)
+					res.Write([]byte("Error updating file."))
+					return false
+				}
+
+				res.WriteHeader(http.StatusOK)
+				res.Write([]byte("Ticket Validated"))
+				return true
+			}
+		}
 	}
 
 	res.WriteHeader(http.StatusBadRequest)
 	res.Write([]byte("Couldn't read data file."))
+	return false
 }
