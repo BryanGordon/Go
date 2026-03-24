@@ -53,7 +53,7 @@ func GenerateTicketConcert(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		newTicket := models.Ticket{Id: keyID, Type: "Concert", Number: generateRandomNumber()}
+		newTicket := models.Ticket{Id: keyID, Type: "Concert", Number: generateRandomNumber(), Validated: false}
 		allTicket.Concert = append(allTicket.Concert, newTicket)
 		dataJson, err := json.MarshalIndent(allTicket, " ", " ")
 
@@ -105,7 +105,7 @@ func GenerateTicketMovie(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		newTicket := models.Ticket{Id: keyId, Type: "Movie", Number: generateRandomNumber()}
+		newTicket := models.Ticket{Id: keyId, Type: "Movie", Number: generateRandomNumber(), Validated: false}
 		ticketsAvailable.Movie = append(ticketsAvailable.Movie, newTicket)
 		dataJson, err := json.MarshalIndent(ticketsAvailable, " ", " ")
 
@@ -178,7 +178,7 @@ func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		newTicket := models.Ticket{Id: keyId, Type: "Train", Number: generateRandomTicketNumber()}
+		newTicket := models.Ticket{Id: keyId, Type: "Train", Number: generateRandomTicketNumber(), Validated: false}
 		ticketList.Train = append(ticketList.Train, newTicket)
 		newDataJson, err := json.MarshalIndent(ticketList, " ", " ")
 
