@@ -14,6 +14,11 @@ var allowedHeaders = []string{"Content-Type"}
 
 func main() {
 	data := routes.Routes()
+	/*
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+		manage.CleanDataFile(ctx)
+	*/
 
 	log.Fatal(http.ListenAndServe(":3000",
 		handlers.CORS(handlers.AllowedOrigins(allowedAccess), handlers.AllowedMethods(allowedMethods), handlers.AllowedHeaders(allowedHeaders))(data)))
