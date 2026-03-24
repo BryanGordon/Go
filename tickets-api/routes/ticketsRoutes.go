@@ -207,7 +207,7 @@ func GenerateTicketTrain(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte("File not found"))
 }
 
-func ValidateTicket(res http.ResponseWriter, req *http.Request) bool {
+func ValidateTicket(res http.ResponseWriter, req *http.Request) {
 	var params = mux.Vars(req)
 	var tickets models.TicketAvailable
 
@@ -219,20 +219,20 @@ func ValidateTicket(res http.ResponseWriter, req *http.Request) bool {
 		if err != nil {
 			res.WriteHeader(http.StatusBadRequest)
 			res.Write([]byte("Error reading data."))
-			return false
+			return
 		}
 
 		_ = json.Unmarshal(data, &tickets)
 
-		for _, value := range tickets.Concert {
+		for index, value := range tickets.Concert {
 			if value.Id.String() == params["id"] {
-				// Cambiar estado de
+				tickets.Concert[index].Validated = true
 				newJson, err := json.MarshalIndent(tickets, " ", " ")
 
 				if err != nil {
 					res.WriteHeader(http.StatusBadRequest)
 					res.Write([]byte("File error."))
-					return false
+					return
 				}
 
 				err = os.WriteFile(filename, newJson, 0644)
@@ -240,24 +240,24 @@ func ValidateTicket(res http.ResponseWriter, req *http.Request) bool {
 				if err != nil {
 					res.WriteHeader(http.StatusBadRequest)
 					res.Write([]byte("Error updating file."))
-					return false
+					return
 				}
 
 				res.WriteHeader(http.StatusOK)
 				res.Write([]byte("Ticket validated."))
-				return true
+				return
 			}
 		}
 
-		for _, value := range tickets.Movie {
+		for index, value := range tickets.Movie {
 			if value.Id.String() == params["id"] {
-				// cambiar valor del validacion
+				tickets.Movie[index].Validated = true
 				newJson, err := json.MarshalIndent(tickets, " ", " ")
 
 				if err != nil {
 					res.WriteHeader(http.StatusBadRequest)
 					res.Write([]byte("File error."))
-					return false
+					return
 				}
 
 				err = os.WriteFile(filename, newJson, 0644)
@@ -265,24 +265,24 @@ func ValidateTicket(res http.ResponseWriter, req *http.Request) bool {
 				if err != nil {
 					res.WriteHeader(http.StatusBadRequest)
 					res.Write([]byte("Error updating file."))
-					return false
+					return
 				}
 
 				res.WriteHeader(http.StatusOK)
 				res.Write([]byte("Ticket validated"))
-				return true
+				return
 			}
 		}
 
-		for _, value := range tickets.Train {
+		for index, value := range tickets.Train {
 			if value.Id.String() == params["id"] {
-				// Cambiar valor
+				tickets.Train[index].Validated = true
 				newJson, err := json.MarshalIndent(tickets, " ", " ")
 
 				if err != nil {
 					res.WriteHeader(http.StatusBadRequest)
 					res.Write([]byte("File error."))
-					return false
+					return
 				}
 
 				err = os.WriteFile(filename, newJson, 0644)
@@ -290,17 +290,20 @@ func ValidateTicket(res http.ResponseWriter, req *http.Request) bool {
 				if err != nil {
 					res.WriteHeader(http.StatusBadRequest)
 					res.Write([]byte("Error updating file."))
-					return false
+					return
 				}
 
 				res.WriteHeader(http.StatusOK)
 				res.Write([]byte("Ticket Validated"))
-				return true
+				return
 			}
 		}
+
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Ticket not found"))
+		return
 	}
 
 	res.WriteHeader(http.StatusBadRequest)
 	res.Write([]byte("Couldn't read data file."))
-	return false
 }
