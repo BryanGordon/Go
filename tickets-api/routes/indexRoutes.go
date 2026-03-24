@@ -9,6 +9,6 @@ func Routes() *mux.Router {
 	routes.HandleFunc("/movies-tickets", GenerateTicketMovie).Methods("POST")
 	routes.HandleFunc("/train-tickets", GenerateTicketTrain).Methods("POST")
 	routes.HandleFunc("/get-all-tickets", GetAllTickets).Methods("GET")
-
+	routes.HandleFunc("/validation/{id}", ValidateTicket).Methods("PATCH")
 	return routes
 }
