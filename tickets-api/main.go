@@ -9,7 +9,7 @@ import (
 )
 
 var allowedAccess = []string{"http://localhost:5173"}
-var allowedMethods = []string{"GET", "POST", "OPTIONS"}
+var allowedMethods = []string{"GET", "POST", "PATCH", "OPTIONS"}
 var allowedHeaders = []string{"Content-Type"}
 
 func main() {
