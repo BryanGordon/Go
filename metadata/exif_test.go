@@ -17,63 +17,95 @@ func putU32LE(b *[]byte, v uint32) {
 
 // buildExifTiff construye un bloque TIFF/EXIF minimo (little endian) con:
 // Make, Modelo, DateTime, DateTimeOriginal, Artist y GPS (lat/lon/alt).
+// En TIFF, los valores ASCII/Rational con count > 4 van en un offset externo;
+// los de count <= 4 se empaquetan inline en los 4 bytes del campo val.
 func buildExifTiff() []byte {
 	type ent struct {
 		tag   uint16
 		typ   uint16 // 1=BYTE, 2=ASCII, 4=LONG, 5=RATIONAL
 		count uint32
-		val   uint32
+		val   uint32 // offset absoluto o valor inline segun el caso
 	}
 	var ifd0, gps []ent
-	var blob []byte
+	var blobIFD0, blobGPS []byte
 
-	putAscii := func(dst *[]ent, tag uint16, s string) {
+	const (
+		tiffHeaderSize = 8
+		ifdEntrySize   = 12
+	)
+
+	// putAscii guarda s (con null) en blob y devuelve su offset relativo.
+	putAscii := func(blob *[]byte, s string) uint32 {
 		data := append([]byte(s), 0)
-		off := uint32(len(blob))
-		blob = append(blob, data...)
-		*dst = append(*dst, ent{tag, 2, uint32(len(data)), off})
+		off := uint32(len(*blob))
+		*blob = append(*blob, data...)
+		return off
 	}
-	putRat := func(dst *[]ent, tag uint16, num, den uint32) {
-		off := uint32(len(blob))
-		putU32LE(&blob, num)
-		putU32LE(&blob, den)
-		*dst = append(*dst, ent{tag, 5, 1, off})
-	}
-	putRat3 := func(dst *[]ent, tag uint16, t [3]struct{ n, d uint32 }) {
-		off := uint32(len(blob))
-		for i := range t {
-			putU32LE(&blob, t[i].n)
-			putU32LE(&blob, t[i].d)
+	// asciiInline empaqueta s (con null, hasta 4 bytes) en un uint32 little-endian.
+	asciiInline := func(s string) uint32 {
+		b := append([]byte(s), 0)
+		for len(b) < 4 {
+			b = append(b, 0)
 		}
-		*dst = append(*dst, ent{tag, 5, 3, off})
+		return uint32(b[0]) | uint32(b[1])<<8 | uint32(b[2])<<16 | uint32(b[3])<<24
 	}
-	putByte := func(dst *[]ent, tag uint16, v byte) {
-		*dst = append(*dst, ent{tag, 1, 1, uint32(v)})
+	putRat := func(blob *[]byte, num, den uint32) uint32 {
+		off := uint32(len(*blob))
+		putU32LE(blob, num)
+		putU32LE(blob, den)
+		return off
+	}
+	putRat3 := func(blob *[]byte, t [3]struct{ n, d uint32 }) uint32 {
+		off := uint32(len(*blob))
+		for i := range t {
+			putU32LE(blob, t[i].n)
+			putU32LE(blob, t[i].d)
+		}
+		return off
 	}
 
-	putAscii(&ifd0, 0x010F, "Canon")       // Make
-	putAscii(&ifd0, 0x0110, "EOS 5D")      // Model
-	putAscii(&ifd0, 0x0132, "2024:01:15 10:30:00") // DateTime
-	putAscii(&ifd0, 0x9003, "2024:01:15 10:30:00") // DateTimeOriginal
-	putAscii(&ifd0, 0x013B, "juan")        // Artist (usuario)
+	// Datos de valores de IFD0
+	offMake := putAscii(&blobIFD0, "Canon")
+	offModel := putAscii(&blobIFD0, "EOS 5D")
+	offDateTime := putAscii(&blobIFD0, "2024:01:15 10:30:00")
+	offDateTimeOrig := putAscii(&blobIFD0, "2024:01:15 10:30:00")
+	offArtist := putAscii(&blobIFD0, "juan")
 
-	putAscii(&gps, 0x0001, "N")                                  // LatitudeRef
-	putRat3(&gps, 0x0002, [3]struct{ n, d uint32 }{{40, 1}, {26, 1}, {468, 10}}) // Latitude
-	putAscii(&gps, 0x0003, "W")                                  // LongitudeRef
-	putRat3(&gps, 0x0004, [3]struct{ n, d uint32 }{{73, 1}, {59, 1}, {723, 10}}) // Longitude
-	putByte(&gps, 0x0005, 0)                                     // AltitudeRef
-	putRat(&gps, 0x0006, 50, 1)                                  // Altitude
+	// Datos de valores de GPS
+	offLat := putRat3(&blobGPS, [3]struct{ n, d uint32 }{{40, 1}, {26, 1}, {468, 10}})
+	offLon := putRat3(&blobGPS, [3]struct{ n, d uint32 }{{73, 1}, {59, 1}, {723, 10}})
+	blobGPS = append(blobGPS, 0) // AltitudeRef = 0
+	offAlt := putRat(&blobGPS, 50, 1)
 
-	blobLen := uint32(len(blob))
-	gpsIfdOffset := uint32(8+2+(len(ifd0)+1)*12+4) + blobLen
-	ifd0 = append(ifd0, ent{0x8825, 4, 1, gpsIfdOffset}) // GPS IFD offset
+	numEntriesIFD0 := 6
+	numEntriesGPS := 6
+
+	dataOffsetIFD0 := uint32(tiffHeaderSize) + 2 + uint32(numEntriesIFD0)*uint32(ifdEntrySize) + 4
+	gpsIfdOffset := dataOffsetIFD0 + uint32(len(blobIFD0))
+	dataOffsetGPS := gpsIfdOffset + 2 + uint32(numEntriesGPS)*uint32(ifdEntrySize) + 4
+
+	abs := func(base uint32, rel uint32) uint32 { return base + rel }
+
+	ifd0 = append(ifd0, ent{0x010F, 2, uint32(len("Canon")+1), abs(dataOffsetIFD0, offMake)})       // Make
+	ifd0 = append(ifd0, ent{0x0110, 2, uint32(len("EOS 5D")+1), abs(dataOffsetIFD0, offModel)})      // Model
+	ifd0 = append(ifd0, ent{0x0132, 2, uint32(len("2024:01:15 10:30:00")+1), abs(dataOffsetIFD0, offDateTime)})
+	ifd0 = append(ifd0, ent{0x9003, 2, uint32(len("2024:01:15 10:30:00")+1), abs(dataOffsetIFD0, offDateTimeOrig)})
+	ifd0 = append(ifd0, ent{0x013B, 2, uint32(len("juan")+1), abs(dataOffsetIFD0, offArtist)})        // Artist
+	ifd0 = append(ifd0, ent{0x8825, 4, 1, gpsIfdOffset})                                                // GPS IFD offset
+
+	gps = append(gps, ent{0x0001, 2, uint32(len("N")+1), asciiInline("N")})          // LatitudeRef (inline)
+	gps = append(gps, ent{0x0002, 5, 3, abs(dataOffsetGPS, offLat)})                    // Latitude
+	gps = append(gps, ent{0x0003, 2, uint32(len("W")+1), asciiInline("W")})          // LongitudeRef (inline)
+	gps = append(gps, ent{0x0004, 5, 3, abs(dataOffsetGPS, offLon)})                    // Longitude
+	gps = append(gps, ent{0x0005, 1, 1, 0})                                             // AltitudeRef (inline = 0)
+	gps = append(gps, ent{0x0006, 5, 1, abs(dataOffsetGPS, offAlt)})                    // Altitude
 
 	var out []byte
-	out = append(out, "II"...)
+	out = append(out, "II"...) // little endian
 	putU16LE(&out, 42)
-	putU32LE(&out, 8) // first IFD offset
+	putU32LE(&out, tiffHeaderSize) // first IFD offset = 8
 
-	putU16LE(&out, uint16(len(ifd0)))
+	putU16LE(&out, uint16(numEntriesIFD0))
 	for _, e := range ifd0 {
 		putU16LE(&out, e.tag)
 		putU16LE(&out, e.typ)
@@ -81,9 +113,9 @@ func buildExifTiff() []byte {
 		putU32LE(&out, e.val)
 	}
 	putU32LE(&out, 0) // next IFD offset
-	out = append(out, blob...)
+	out = append(out, blobIFD0...)
 
-	putU16LE(&out, uint16(len(gps)))
+	putU16LE(&out, uint16(numEntriesGPS))
 	for _, e := range gps {
 		putU16LE(&out, e.tag)
 		putU16LE(&out, e.typ)
@@ -91,6 +123,8 @@ func buildExifTiff() []byte {
 		putU32LE(&out, e.val)
 	}
 	putU32LE(&out, 0)
+	out = append(out, blobGPS...)
+
 	return out
 }
 

@@ -96,16 +96,23 @@ func ExtraerExif(path string) (*FileMeta, error) {
 		fm.Usuario = usuario
 	}
 
-	// Ubicacion: GPS.
-	if gi, err := root.GpsInfo(); err == nil && gi != nil {
+	// Ubicacion: GPS (se lee en el sub-IFD GPS, hijo de IFD0).
+	var gi *exif.GpsInfo
+	for _, child := range root.Children() {
+		if g, err := child.GpsInfo(); err == nil && g != nil {
+			gi = g
+			break
+		}
+	}
+	if gi != nil {
 		loc := &Location{}
 		tiene := false
 		if gi.Latitude.Degrees != 0 || gi.Latitude.Minutes != 0 || gi.Latitude.Seconds != 0 {
-			loc.Lat = decimalGrados(gi.Latitude, gi.Latitude.Orientation)
+			loc.Lat = gi.Latitude.Decimal()
 			tiene = true
 		}
 		if gi.Longitude.Degrees != 0 || gi.Longitude.Minutes != 0 || gi.Longitude.Seconds != 0 {
-			loc.Lon = decimalGrados(gi.Longitude, gi.Longitude.Orientation)
+			loc.Lon = gi.Longitude.Decimal()
 			tiene = true
 		}
 		if gi.Altitude != 0 {
@@ -163,12 +170,3 @@ func valorTag(root *exif.Ifd, id uint16) string {
 	return ""
 }
 
-// decimalGrados convierte grados/minutos/segundos a decimal con signo segun
-// la referencia (N/S para latitud, E/W para longitud).
-func decimalGrados(gd exif.GpsDegrees, ref byte) float64 {
-	d := gd.Degrees + gd.Minutes/60.0 + gd.Seconds/3600.0
-	if ref == 'S' || ref == 'W' {
-		d = -d
-	}
-	return d
-}
